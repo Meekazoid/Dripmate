@@ -685,12 +685,13 @@ export function clearFeedbackHistory(index) {
 // ==========================================
 
 export function openClearHistoryConfirm() {
-    const modal = document.getElementById("feedbackHistoryModal");
+    const historyModal = document.getElementById("feedbackHistoryModal");
     const confirmModal = document.getElementById("clearHistoryConfirmModal");
     if (!confirmModal) return;
-    // Übergib den Index ans Confirm-Modal
-    const idx = modal && modal.dataset.coffeeIndex;
+    // Index merken und History-Modal schließen
+    const idx = historyModal && historyModal.dataset.coffeeIndex;
     confirmModal.dataset.coffeeIndex = idx;
+    if (historyModal) historyModal.style.display = "none";
     confirmModal.style.display = "flex";
 }
 
