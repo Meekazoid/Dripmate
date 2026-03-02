@@ -650,6 +650,32 @@
         </div>
     </div>
 
+    <!-- ====== CLEAR HISTORY CONFIRMATION MODAL ====== -->
+    <div id="clearHistoryConfirmModal" class="modal">
+        <div class="modal-content modal-content--narrow compost-confirm-modal-content">
+            <div class="popup-header-standard">
+                <div class="popup-title-group">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6l-1 14H6L5 6"></path>
+                        <path d="M10 11v6M14 11v6"></path>
+                        <path d="M9 6V4h6v2"></path>
+                    </svg>
+                    <h2>Delete adjustment history?</h2>
+                </div>
+                <button class="close-btn" id="closeClearHistoryConfirmBtn">&#x2715;</button>
+            </div>
+            <div class="info-box-standard">
+                <strong>This cannot be undone</strong>
+                <p>All recorded grind and temperature adjustments for this coffee will be permanently deleted.</p>
+            </div>
+            <div class="compost-confirm-actions">
+                <button id="cancelClearHistoryConfirmBtn" class="compost-confirm-btn-secondary">Cancel</button>
+                <button id="confirmClearHistoryBtn" class="permanent-delete-btn">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ====== FEEDBACK HISTORY MODAL ====== -->
     <div id="feedbackHistoryModal" class="modal">
         <div class="modal-content modal-content--narrow">
@@ -667,14 +693,14 @@
                 <strong>Timeline</strong>
                 <p>Track applied grind and temperature changes per coffee.</p>
             </div>
+            <div style="text-align: center; margin-top: 4px; margin-bottom: 8px;">
+                <button class="permanent-delete-btn" id="clearHistoryBtn" onclick="openClearHistoryConfirm()">
+                    Clear History
+                </button>
+            </div>
             <div id="feedbackHistoryList" class="history-list"></div>
             <div id="feedbackHistoryEmpty" class="decaf-empty" style="display: none;">
                 No adjustments applied yet.
-            </div>
-            <div style="text-align: center; margin-top: 16px;">
-                <button class="permanent-delete-btn" id="clearHistoryBtn" onclick="clearFeedbackHistory()">
-                    Clear History
-                </button>
             </div>
         </div>
     </div>
@@ -685,7 +711,7 @@
     <script src="js/brew-timer-stubs.js"></script>
 
     <script type="module" src="js/app.js"></script>
-    <script type="module" src="js/services/backend-sync.js"></script>
+    <script src="js/services/backend-sync.js"></script>
     
     <!-- Service Worker Registration for Offline PWA Support -->
     <script src="js/sw-register.js"></script>

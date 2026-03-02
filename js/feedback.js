@@ -680,6 +680,41 @@ export function clearFeedbackHistory(index) {
     if (emptyEl) emptyEl.style.display = 'block';
 }
 
+// ==========================================
+// CLEAR HISTORY CONFIRM MODAL
+// ==========================================
+
+export function openClearHistoryConfirm() {
+    const modal = document.getElementById("feedbackHistoryModal");
+    const confirmModal = document.getElementById("clearHistoryConfirmModal");
+    if (!confirmModal) return;
+    // Übergib den Index ans Confirm-Modal
+    const idx = modal && modal.dataset.coffeeIndex;
+    confirmModal.dataset.coffeeIndex = idx;
+    confirmModal.style.display = "flex";
+}
+
+export function closeClearHistoryConfirm() {
+    const confirmModal = document.getElementById("clearHistoryConfirmModal");
+    if (confirmModal) confirmModal.style.display = "none";
+}
+
+function initClearHistoryConfirmListeners() {
+    const closeBtn  = document.getElementById("closeClearHistoryConfirmBtn");
+    const cancelBtn = document.getElementById("cancelClearHistoryConfirmBtn");
+    const okBtn     = document.getElementById("confirmClearHistoryBtn");
+    if (closeBtn)  closeBtn.addEventListener("click",  closeClearHistoryConfirm);
+    if (cancelBtn) cancelBtn.addEventListener("click", closeClearHistoryConfirm);
+    if (okBtn) okBtn.addEventListener("click", () => {
+        const confirmModal = document.getElementById("clearHistoryConfirmModal");
+        const idx = confirmModal && Number(confirmModal.dataset.coffeeIndex);
+        closeClearHistoryConfirm();
+        clearFeedbackHistory(idx);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", initClearHistoryConfirmListeners);
+
 // Register functions on window for onclick handlers
 window.selectFeedback = selectFeedback;
 window.updateFeedbackSlider = updateFeedbackSlider;
@@ -691,3 +726,5 @@ window.resetCoffeeAdjustments = resetCoffeeAdjustments;
 window.openFeedbackHistory = openFeedbackHistory;
 window.closeFeedbackHistory = closeFeedbackHistory;
 window.clearFeedbackHistory = clearFeedbackHistory;
+window.openClearHistoryConfirm = openClearHistoryConfirm;
+window.closeClearHistoryConfirm = closeClearHistoryConfirm;
