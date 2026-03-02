@@ -1,10 +1,10 @@
-// ==========================================
+﻿// ==========================================
 // DRIPMATE - APP.JS (ES MODULE ENTRY POINT)
 // Main entry point that imports all modules
 // ==========================================
 
 // Import all modules
-import { initTheme, toggleTheme, toggleManual, collapseManual } from './theme.js';
+import { initTheme, toggleTheme, toggleManual, collapseManual, alignHeader } from './theme.js';
 import { initGlobalGrinder } from './grinder.js';
 import { closeFeedbackHistory, migrateCoffeesInitialValues } from './feedback.js';
 import { initFeedbackSliderInteractions } from './feedback.js';
@@ -130,6 +130,8 @@ function initApp() {
 
     // Initialize theme early
     initTheme();
+    alignHeader();
+    window.addEventListener('resize', alignHeader);
 
     // Migrate existing coffees: stamp initialGrind/initialTemp
     migrateCoffeesInitialValues();

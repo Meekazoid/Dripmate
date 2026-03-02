@@ -1,9 +1,9 @@
-/**
+﻿﻿﻿﻿/**
  * dripmate Service Worker
  * Provides offline PWA support with intelligent caching strategies
  */
 
-const CACHE_VERSION = 'v30.1';  // bumped from v10.9 – card editor feature
+const CACHE_VERSION = 'v31.0';  // bumped for coffee-bag asset extraction
 
 // Static assets to pre-cache during installation
 const STATIC_ASSETS = [
@@ -28,6 +28,8 @@ const STATIC_ASSETS = [
   '/js/water-hardness.js',
   '/js/settings.js',
   '/js/services/backend-sync.js',
+  '/js/brew-timer-stubs.js',
+  '/js/sw-register.js',
   '/js/data/water-hardness-db.js',
   '/manifest.json',
   '/logo.png',
@@ -37,10 +39,13 @@ const STATIC_ASSETS = [
   '/logo-maskable-512.png',
   '/compost-icon.png',
   '/compost.svg',
-  '/v60-icon.png'
+  '/v60-icon.png',
+  '/assets/coffee-bag-shot.png'
 ];
 
 // API domain for network-first strategy
+// IMPORTANT: Service workers cannot import ES modules, so this hostname
+// must be kept manually in sync with BACKEND_HOSTNAME in js/config.js.
 const API_DOMAIN = 'dripmate-backend-production.up.railway.app';
 
 // Static file extensions to cache
@@ -103,7 +108,7 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
 
-  // Only cache GET requests – POST/PUT/DELETE/PATCH cannot be cached
+  // Only cache GET requests â€“ POST/PUT/DELETE/PATCH cannot be cached
   if (request.method !== 'GET') {
     event.respondWith(fetch(request));
     return;

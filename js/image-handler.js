@@ -1,9 +1,10 @@
-// ==========================================
+﻿// ==========================================
 // IMAGE HANDLING & AI ANALYSIS
 // Camera capture, file upload, image compression
 // ==========================================
 
 import { CONFIG } from './config.js';
+import { getToken } from './services/backend-sync.js';
 import { addCoffee, saveCoffeesAndSync } from './state.js';
 import { renderCoffees } from './coffee-list.js';
 import { showMessage } from './messages.js';
@@ -71,7 +72,7 @@ async function compressImage(file, maxSizeMB = 4.0) {
 async function analyzeCoffeeImage(imageData, mediaType) {
     if (!CONFIG.backendUrl) throw new Error('Backend URL not configured. Please enter it in settings.');
 
-    const token = localStorage.getItem('token');
+    const token = getToken();
     const deviceId = localStorage.getItem('deviceId');
     if (!token || !deviceId) {
         throw new Error('Device not activated. Please add your access code in Settings (⚙️) to use AI scan.');

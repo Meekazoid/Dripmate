@@ -1,4 +1,4 @@
-/* ==========================================
+﻿﻿﻿﻿﻿﻿/* ==========================================
    DRIPMATE - STYLE.CSS
    Extracted & cleaned from index.html
    ========================================== */
@@ -12,9 +12,14 @@
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 html {
+    font-size: 16px;                  /* Anchor rem units — Firefox & Safari use this */
+    -webkit-text-size-adjust: 100%;   /* Prevent iOS Safari auto-zoom on orientation change */
+    text-size-adjust: 100%;           /* Standard equivalent */
     overflow-x: hidden;
     overflow-y: auto;
     width: 100%;
@@ -41,6 +46,8 @@ body {
     --accent-hover: #c09563;
     --border: #2a2a2a;
     --shadow: rgba(0, 0, 0, 0.5);
+    --color-danger: #ff6b6b;
+    --color-success: #4CAF50;
 }
 
 body.light-mode {
@@ -53,6 +60,8 @@ body.light-mode {
     --accent-hover: #7a5f3d;
     --border: #e0e0e0;
     --shadow: rgba(0, 0, 0, 0.1);
+    --color-danger: #c62828;
+    --color-success: #2E7D32;
 }
 
 /* ==========================================
@@ -116,10 +125,6 @@ header {
     transform: none;
     filter: none !important; 
     -webkit-filter: none !important;
-}
-
-body.light-mode .header-logo {
-    filter: none !important;
 }
 
 /* ─── Logo dark/light swap ─── */
@@ -1171,8 +1176,25 @@ body.light-mode .freshness-badge-inline .freshness-badge.fading {
     font-family: inherit;
     line-height: 1;
     text-align: center;
-    transition: all 0.2s;
+    transition: border-color 0.2s;
     cursor: pointer;
+    /* Suppress native browser date UI across all engines */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Hide native date placeholder text when no value is set.
+   Firefox shows dd.mm.yy, Safari shows mm/dd/yyyy — custom overlay handles this state. */
+.roast-date-input:not(.has-date) {
+    color: transparent;
+    caret-color: transparent;
+}
+
+/* Restore colour once user has picked a date */
+.roast-date-input.has-date {
+    color: var(--text-primary);
+    caret-color: var(--text-primary);
 }
 
 .roast-date-input:focus {
@@ -1190,6 +1212,7 @@ body.light-mode .freshness-badge-inline .freshness-badge.fading {
     pointer-events: none;
     opacity: 1;
     transition: opacity 0.15s ease;
+    white-space: nowrap;
 }
 
 .roast-date-input.has-date + .roast-date-placeholder,
@@ -1201,11 +1224,22 @@ body.light-mode .freshness-badge-inline .freshness-badge.fading {
 .roast-date-input::-webkit-calendar-picker-indicator {
     cursor: pointer;
     filter: invert(0.5);
+    opacity: 0.6;
     margin-right: 4px;
 }
-
+/* Hide calendar icon when no date set — custom placeholder handles this state */
+.roast-date-input:not(.has-date)::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    pointer-events: none;
+}
+/* Firefox: suppress built-in inner focus ring */
+.roast-date-input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
 body.light-mode .roast-date-input::-webkit-calendar-picker-indicator {
     filter: invert(0.2);
+    opacity: 0.6;
 }
 
 body.light-mode .roast-date-section {
@@ -1381,8 +1415,8 @@ body.light-mode .water-hardness-badge {
     margin: 20px auto 0;
     padding: 8px 20px;
     background: transparent;
-    color: #ff6b6b;
-    border: 1px solid #ff6b6b;
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
     border-radius: 8px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -1566,7 +1600,7 @@ body.light-mode .ratio-slider input[type="range"]::-moz-range-thumb {
 .step-progress-bar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #4CAF50 0%, #66BB6A 100%);
+    background: linear-gradient(90deg, var(--color-success) 0%, color-mix(in srgb, var(--color-success) 70%, #fff 30%) 100%);
     border-radius: 3px;
     transition: width 0.5s ease-out;
     will-change: width;
@@ -1577,7 +1611,7 @@ body.light-mode .step-progress {
 }
 
 body.light-mode .step-progress-bar {
-    background: linear-gradient(90deg, #2E7D32 0%, #43A047 100%);
+    background: linear-gradient(90deg, #2E7D32 0%, color-mix(in srgb, var(--color-success) 85%, #fff 15%) 100%);
 }
 
 /* ==========================================
@@ -1636,16 +1670,16 @@ body.light-mode .step-progress-bar {
 }
 
 .timer-btn.start-brew {
-    background: #4CAF50;
+    background: var(--color-success);
     color: white;
-    border-color: #4CAF50;
+    border-color: var(--color-success);
     min-width: 200px;
     padding: 12px 24px;
     font-size: 0.95rem;
 }
 
 .timer-btn.start-brew:hover {
-    background: #45a049;
+    background: color-mix(in srgb, var(--color-success) 90%, #000 10%);
 }
 
 .timer-btn.brewing {
@@ -1994,14 +2028,14 @@ body.light-mode .feedback-slider-labels {
     margin: 14px auto 0;
     padding: 8.5px 17px;
     font-size: 0.7225rem;
-    background: #4CAF50;
-    border: 1px solid #4CAF50;
+    background: var(--color-success);
+    border: 1px solid var(--color-success);
     color: white;
 }
 
 .history-btn:hover {
-    background: #45a049;
-    border-color: #45a049;
+    background: color-mix(in srgb, var(--color-success) 90%, #000 10%);
+    border-color: color-mix(in srgb, var(--color-success) 90%, #000 10%);
     color: white;
 }
 
@@ -2017,6 +2051,12 @@ body.light-mode .feedback-slider-labels {
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 12px;
+}
+
+/* Brew-start entries: subtler styling — no parameter diff, just a timestamp marker */
+.history-item--brew-start {
+    border-style: dashed;
+    opacity: 0.7;
 }
 
 .history-item-top {
@@ -2154,44 +2194,6 @@ body.light-mode .feedback-slider-labels {
     line-height: 1;
 }
 
-/* Manual Water Hardness Input Group */
-.manual-hardness-group {
-    margin-top: 24px;
-    padding: 20px;
-    background: var(--bg-card);
-    border-radius: 12px;
-    border-left: 4px solid var(--accent);
-}
-
-.manual-hardness-input-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.manual-hardness-input-row input[type="number"] {
-    flex: 1;
-    min-width: 0;
-}
-
-.manual-hardness-input-row button {
-    flex-shrink: 0;
-    white-space: nowrap;
-    padding: 14px 20px;
-    width: auto;
-}
-
-/* Mobile optimization */
-@media (max-width: 480px) {
-    .manual-hardness-input-row {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .manual-hardness-input-row button {
-        width: 100%;
-    }
-}
 
 /* ==========================================
    20. DECAF (TRASH BIN) CARDS
@@ -2251,8 +2253,8 @@ body.light-mode .feedback-slider-labels {
 .permanent-delete-btn {
     padding: 8px 16px;
     background: transparent;
-    color: #ff6b6b;
-    border: 1px solid #ff6b6b;
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
     border-radius: 8px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -2295,7 +2297,7 @@ body.light-mode .feedback-slider-labels {
 }
 
 body.light-mode .error-message {
-    color: #c62828;
+    color: var(--color-danger);
     background: rgba(198, 40, 40, 0.06);
     border-color: rgba(198, 40, 40, 0.2);
 }
@@ -2308,8 +2310,8 @@ body.light-mode .success-message {
 
 /* Light-mode contrast for destructive actions */
 body.light-mode .reset-adjustments-btn {
-    color: #c62828;
-    border-color: #c62828;
+    color: var(--color-danger);
+    border-color: var(--color-danger);
 }
 
 body.light-mode .reset-adjustments-btn:hover {
@@ -2317,8 +2319,8 @@ body.light-mode .reset-adjustments-btn:hover {
 }
 
 body.light-mode .permanent-delete-btn {
-    color: #c62828;
-    border-color: #c62828;
+    color: var(--color-danger);
+    border-color: var(--color-danger);
 }
 
 body.light-mode .permanent-delete-btn:hover {
@@ -2960,8 +2962,8 @@ body.light-mode .coffee-roastery {
 
 .edit-btn.editing {
     background: rgba(76, 175, 80, 0.15);
-    border-color: #4CAF50;
-    color: #4CAF50;
+    border-color: var(--color-success);
+    color: var(--color-success);
     opacity: 1;
 }
 
@@ -2971,8 +2973,8 @@ body.light-mode .edit-btn {
 
 body.light-mode .edit-btn.editing {
     background: rgba(46, 125, 50, 0.1);
-    border-color: #2E7D32;
-    color: #2E7D32;
+    border-color: var(--color-success);
+    color: var(--color-success);
 }
 
 .edit-icon {
