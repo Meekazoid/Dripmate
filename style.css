@@ -1648,8 +1648,8 @@ body.light-mode .step-progress-bar {
 }
 
 .timer-btn.brewing {
-    background: #ff9800;
-    border-color: #ff9800;
+    background: var(--color-success);
+    border-color: var(--color-success);
     color: white;
 }
 
