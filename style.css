@@ -26,12 +26,6 @@ html {
     scroll-behavior: smooth;
 }
 
-body {
-    overflow-x: hidden;
-    overflow-y: auto;
-    width: 100%;
-}
-
 /* ==========================================
    2. CSS VARIABLES (THEMES)
    ========================================== */
@@ -69,6 +63,9 @@ body.light-mode {
    ========================================== */
 
 body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', sans-serif;
     background: var(--bg-primary);
     color: var(--text-primary);
@@ -1280,20 +1277,7 @@ body.light-mode .roast-date-section {
     overflow-wrap: break-word;
 }
 
-/* -- Roast date: mobile centering, arrow offset, Android font -- */
-@media (max-width: 600px) {
-    .roast-date-input-wrapper {
-        justify-content: center;
-    }
-
-    .roast-date-input::-webkit-calendar-picker-indicator {
-        margin-right: 4px;
-    }
-
-    .roast-date-input.has-date {
-        font-size: 0.66rem;
-    }
-}
+/* Roast date responsive -> moved to Section 23 */
 
 /* ==========================================
    12. WATER HARDNESS BADGE
@@ -2273,7 +2257,7 @@ body.light-mode .feedback-slider-labels {
 
 .decaf-empty {
     text-align: center;
-    padding: 40px 20px;
+    padding: 48px 20px;
     color: var(--text-secondary);
 }
 
@@ -2578,6 +2562,21 @@ body.light-mode .onboarding-icon {
     }
 }
 
+/* -- Roast date: mobile centering, arrow offset, Android font -- */
+@media (max-width: 600px) {
+    .roast-date-input-wrapper {
+        justify-content: center;
+    }
+
+    .roast-date-input::-webkit-calendar-picker-indicator {
+        margin-right: 4px;
+    }
+
+    .roast-date-input.has-date {
+        font-size: 0.66rem;
+    }
+}
+
 /* Desktop (=769px) */
 @media (min-width: 769px) {
     .global-grinder-selector {
@@ -2739,10 +2738,7 @@ body.light-mode .onboarding-icon {
     margin-top: 20px;
 }
 
-.decaf-empty {
-    padding: 48px 20px;
-    text-align: center;
-}
+/* .decaf-empty -> consolidated in Section 20 */
 
 .compost-empty-icon {
     width: 76px;
