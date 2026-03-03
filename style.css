@@ -1,4 +1,4 @@
-/* ==========================================
+﻿/* ==========================================
    DRIPMATE - STYLE.CSS
    Extracted & cleaned from index.html
    ========================================== */
@@ -2910,11 +2910,11 @@ body.light-mode .info-box-standard {
 }
 
 /* ==========================================
-   CARD EDITOR – CSS ADDITIONS
+   28. CARD EDITOR
    ==========================================
    
 /* ==========================================
-   ROASTERY LABEL (above coffee-name)
+   28a. ROASTERY LABEL
    ========================================== */
 
 .coffee-roastery {
@@ -2934,7 +2934,7 @@ body.light-mode .coffee-roastery {
 }
 
 /* ==========================================
-   EDIT BUTTON (between Favorite and Delete)
+   28b. EDIT BUTTON
    ========================================== */
 
 .edit-btn {
@@ -2992,7 +2992,7 @@ body.light-mode .edit-btn.editing {
 }
 
 /* ==========================================
-   INLINE EDIT INPUTS
+   28c. INLINE EDIT INPUTS
    ========================================== */
 
 .coffee-card .inline-edit-input {

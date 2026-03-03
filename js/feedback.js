@@ -701,11 +701,13 @@ export function closeClearHistoryConfirm() {
 }
 
 function initClearHistoryConfirmListeners() {
-    const closeBtn  = document.getElementById("closeClearHistoryConfirmBtn");
-    const cancelBtn = document.getElementById("cancelClearHistoryConfirmBtn");
-    const okBtn     = document.getElementById("confirmClearHistoryBtn");
-    if (closeBtn)  closeBtn.addEventListener("click",  closeClearHistoryConfirm);
-    if (cancelBtn) cancelBtn.addEventListener("click", closeClearHistoryConfirm);
+    const closeBtn      = document.getElementById("closeClearHistoryConfirmBtn");
+    const cancelBtn     = document.getElementById("cancelClearHistoryConfirmBtn");
+    const okBtn         = document.getElementById("confirmClearHistoryBtn");
+    const triggerBtn    = document.getElementById("clearHistoryBtn");
+    if (closeBtn)    closeBtn.addEventListener("click",   closeClearHistoryConfirm);
+    if (cancelBtn)   cancelBtn.addEventListener("click",  closeClearHistoryConfirm);
+    if (triggerBtn)  triggerBtn.addEventListener("click", openClearHistoryConfirm);
     if (okBtn) okBtn.addEventListener("click", () => {
         const confirmModal = document.getElementById("clearHistoryConfirmModal");
         const idx = confirmModal && Number(confirmModal.dataset.coffeeIndex);
