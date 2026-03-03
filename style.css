@@ -17,7 +17,7 @@
 }
 
 html {
-    font-size: 17px;                  /* Anchor rem units ? Firefox & Safari use this */
+    font-size: 18px;                  /* Anchor rem units ? Firefox & Safari use this */
     -webkit-text-size-adjust: 100%;   /* Prevent iOS Safari auto-zoom on orientation change */
     text-size-adjust: 100%;           /* Standard equivalent */
     overflow-x: hidden;
