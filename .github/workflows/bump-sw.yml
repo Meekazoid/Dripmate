@@ -4,7 +4,10 @@ on:
   push:
     branches: [main]
     paths-ignore:
-      - 'sw.js'  # prevent infinite loop
+      - 'sw.js'
+
+permissions:
+  contents: write
 
 jobs:
   bump-sw-version:
@@ -16,15 +19,10 @@ jobs:
 
       - name: Bump SW cache version
         run: |
-          # Extract current version number
           CURRENT=$(grep -oP "CACHE_VERSION = 'v\K[0-9]+\.[0-9]+" sw.js)
           echo "Current version: v$CURRENT"
-          
-          # Increment by 0.1
           NEW=$(echo "$CURRENT + 0.1" | bc)
           echo "New version: v$NEW"
-          
-          # Replace in sw.js
           sed -i "s/CACHE_VERSION = 'v$CURRENT'/CACHE_VERSION = 'v$NEW'/" sw.js
 
       - name: Commit bumped version
