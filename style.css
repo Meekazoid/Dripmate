@@ -3288,3 +3288,12 @@ body.light-mode .edit-btn.editing:hover {
     flex: 1;
     line-height: 1.3;
 }
+
+/* ==========================================
+   CHROME ANDROID FIX — 360px viewport
+   ========================================== */
+@media screen and (max-width: 390px) {
+    html {
+        font-size: 14px;
+    }
+}
