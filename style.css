@@ -3318,3 +3318,51 @@ body.light-mode .edit-btn.editing:hover {
         padding: 16px 14px;
     }
 }
+
+/* ==========================================
+   CUSTOM ROAST DATE DISPLAY
+   Replaces native date input rendering
+   ========================================== */
+.roast-date-input-shell {
+    position: relative;
+    cursor: pointer;
+    min-width: 130px;
+}
+
+.roast-date-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.roast-date-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    padding: 0 12px;
+    background: var(--bg-secondary);
+    border: 1px solid color-mix(in srgb, var(--border) 80%, transparent 20%);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-family: inherit;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+    transition: border-color 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.roast-date-display.has-date {
+    color: var(--text-primary);
+    border-color: var(--accent);
+}
+
+.roast-date-input-shell:hover .roast-date-display,
+.roast-date-input-shell:focus-within .roast-date-display {
+    border-color: var(--accent);
+}

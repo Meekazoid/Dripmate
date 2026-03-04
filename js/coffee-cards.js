@@ -101,11 +101,12 @@ export function renderCoffeeCard(coffee, index) {
                             <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
                         </svg>
                         <span class="roast-label">Roast Date</span>
-                        <div class="roast-date-input-shell">
-                            <input type="date" id="roastDate-${index}" class="roast-date-input ${coffee.roastDate ? 'has-date' : ''}"
+                        <div class="roast-date-input-shell" onclick="var inp=document.getElementById('roastDate-'+${index}); if(inp.showPicker){inp.showPicker();}else{inp.click();} event.stopPropagation();">
+                            <input type="date" id="roastDate-${index}" class="roast-date-input"
                                 value="${coffee.roastDate || ''}"
-                                onchange="updateRoastDate(${index}, this.value); event.stopPropagation();"
+                                onchange="updateRoastDate(${index}, this.value); var d=document.getElementById('roastDateDisplay-${index}'); d.textContent=this.value?this.value.split('-').reverse().join('.'):'DD.MM.YYYY'; d.classList.toggle('has-date',Boolean(this.value)); event.stopPropagation();"
                                 onclick="event.stopPropagation();" />
+                            <div class="roast-date-display ${coffee.roastDate ? 'has-date' : ''}" id="roastDateDisplay-${index}">${coffee.roastDate ? coffee.roastDate.split('-').reverse().join('.') : 'DD.MM.YYYY'}</div>
                         </div>
                     </div>
                 </div>

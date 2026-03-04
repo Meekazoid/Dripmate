@@ -13,8 +13,13 @@ export function updateRoastDate(index, dateValue) {
     if (roastInput) {
         roastInput.classList.toggle('has-date', Boolean(dateValue));
     }
+    const display = document.getElementById(`roastDateDisplay-${index}`);
+    if (display) {
+        display.textContent = dateValue ? dateValue.split('-').reverse().join('.') : 'DD.MM.YYYY';
+        display.classList.toggle('has-date', Boolean(dateValue));
+    }
 
-    const badgeWrapper = document.getElementById(`freshness-badge-${index}`);
+        const badgeWrapper = document.getElementById(`freshness-badge-${index}`);
     if (badgeWrapper) {
         badgeWrapper.innerHTML = getRoastFreshnessBadge(coffees[index].roastDate);
     }
