@@ -1,4 +1,4 @@
-/* ==========================================    DRIPMATE - STYLE.CSS    Extracted & cleaned from index.html    ========================================== */  /* ==========================================    1. RESET & BASE    ========================================== */  * {
+﻿/* ==========================================    DRIPMATE - STYLE.CSS    Extracted & cleaned from index.html    ========================================== */  /* ==========================================    1. RESET & BASE    ========================================== */  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -1570,14 +1570,16 @@ body.light-mode .step-progress-bar {
     display: inline-flex;
     align-items: center;
     flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     pointer-events: none;
+    overflow: hidden;
 }
 
 .brew-btn-icon svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
 }
 
 /* Override SVG fill colors so icon shows white on gold button */
