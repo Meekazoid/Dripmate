@@ -254,8 +254,8 @@ function adjustForWaterHardness(params) {
 //   Fellow Ode Gen 1: ~50µm/step (original 64mm flat)
 //   Timemore S3: 15µm/click, 42mm S2C890, V60 range 50-80
 //   Timemore C2: ~80µm/click, 38mm conical, V60 range 15-20
-//   1Zpresso JX: 48mm conical, 30 clicks/rotation
-//   Baratza Encore: 40mm conical, 40 stepped settings
+//   1Zpresso JX: 48mm conical, 30 clicks/rotation, V60 range ~2.5-3.0 rot (baseFactor 3.5/30)
+//   Baratza Encore: 40mm conical, 40 stepped settings, V60 range 18-22 (baseFactor 0.9)
 // ==========================================
 
 function getGrinderValue(grindBase, grinder, offset) {
@@ -270,11 +270,11 @@ function getGrinderValue(grindBase, grinder, offset) {
         fellow_gen2: { type: 'ode', baseRef: 'fellow2', offsetFactor: 0.1, min: 0.1 },
         fellow_gen1: { type: 'ode', baseRef: 'fellow1', offsetFactor: 0.1, min: 0.1 },
         fellow: { type: 'ode', baseRef: 'fellow2', offsetFactor: 0.1, min: 0.1 },
-        timemore_s3: { type: 'clicks', baseFactor: 2.0, offsetFactor: 2.0, min: 1 },
+        timemore_s3: { type: 'clicks', baseFactor: 2.5, offsetFactor: 2.5, min: 1 },
         timemore_c2: { type: 'clicks', baseFactor: 0.82, offsetFactor: 0.82, min: 1 },
-        timemore: { type: 'clicks', baseFactor: 2.0, offsetFactor: 2.0, min: 1 },
-        '1zpresso': { type: 'rot', baseFactor: 1.1 / 30, offsetFactor: 1.1 / 30, min: 0.1 },
-        baratza: { type: 'encore', baseFactor: 0.8, offsetFactor: 0.8, min: 1, max: 40 }
+        timemore: { type: 'clicks', baseFactor: 2.5, offsetFactor: 2.5, min: 1 },
+        '1zpresso': { type: 'rot', baseFactor: 3.5 / 30, offsetFactor: 3.5 / 30, min: 0.1 },
+        baratza: { type: 'encore', baseFactor: 0.9, offsetFactor: 0.9, min: 1, max: 40 }
     };
 
     const profile = profiles[grinder] || profiles.fellow;
