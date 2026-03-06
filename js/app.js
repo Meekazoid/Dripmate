@@ -1,4 +1,4 @@
-// ==========================================
+﻿// ==========================================
 // DRIPMATE - APP.JS (ES MODULE ENTRY POINT)
 // Main entry point that imports all modules
 // ==========================================
@@ -25,7 +25,9 @@ import {
     activateDevice,
     openDecafModal,
     closeDecafModal,
-    handleMagicLink
+    handleMagicLink,
+    saveEmailForRecovery,
+    requestMagicLink
 } from './settings.js';
 import { updateRoastDate } from './freshness.js';
 import { 
@@ -100,6 +102,50 @@ function initEventListeners() {
             console.error('Activation error:', err); 
         }); 
     });
+
+    // Magic Link Toggle
+    const showMagicBtn = document.getElementById('showMagicLinkBtn');
+    if (showMagicBtn) {
+        showMagicBtn.addEventListener('click', () => {
+            const form = document.getElementById('magicLinkForm');
+            if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+    }
+
+    // Send Magic Link
+    const sendMagicBtn = document.getElementById('sendMagicLinkBtn');
+    if (sendMagicBtn) {
+        sendMagicBtn.addEventListener('click', async () => {
+            const email  = document.getElementById('magicLinkEmailInput').value.trim();
+            const status = document.getElementById('magicLinkStatus');
+            if (!email) { status.textContent = 'Bitte E-Mail eingeben.'; status.style.display = 'block'; return; }
+            sendMagicBtn.disabled = true;
+            sendMagicBtn.textContent = 'Wird gesendet…';
+            const result = await requestMagicLink(email);
+            sendMagicBtn.disabled = false;
+            sendMagicBtn.textContent = 'Login-Link senden';
+            status.style.display = 'block';
+            status.textContent = result.success
+                ? '✓ Link gesendet — schau in dein Postfach!'
+                : (result.error || 'Fehler beim Senden.');
+        });
+    }
+
+    // Save Recovery Email (shown when already activated)
+    const saveEmailBtn = document.getElementById('saveRecoveryEmailBtn');
+    if (saveEmailBtn) {
+        saveEmailBtn.addEventListener('click', async () => {
+            const email  = document.getElementById('recoveryEmailInput').value.trim();
+            const status = document.getElementById('recoveryEmailStatus');
+            if (!email) return;
+            saveEmailBtn.disabled = true;
+            const result = await saveEmailForRecovery(email);
+            saveEmailBtn.disabled = false;
+            status.style.display = 'block';
+            status.style.color = result.success ? '#5fda7d' : '#ff6b7a';
+            status.textContent = result.success ? '✓ E-Mail gespeichert' : (result.error || 'Fehler');
+        });
+    }
 
     // Impressum & Datenschutz
     document.getElementById('openImpressumBtn').addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); openModal('impressumModal'); });

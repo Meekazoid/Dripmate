@@ -1,4 +1,4 @@
-// ==========================================
+﻿// ==========================================
 // SETTINGS & DEVICE ACTIVATION
 // Settings panel, activation code, decaf modal
 // ==========================================
@@ -15,15 +15,22 @@ export function openSettings() {
     const inputWrap   = document.getElementById('activationInputWrap');
     const activateBtn = document.getElementById('activateDeviceBtn');
 
+    const magicSection  = document.getElementById('magicLinkSection');
+    const emailSection   = document.getElementById('emailRecoverySection');
+
     if (token) {
-        if (subtitle)    { subtitle.textContent = 'Device already activated'; subtitle.style.color = '#5fda7d'; }
-        if (inputWrap)   inputWrap.style.display = 'none';
-        if (activateBtn) activateBtn.style.display = 'none';
+        if (subtitle)      { subtitle.textContent = 'Device already activated'; subtitle.style.color = '#5fda7d'; }
+        if (inputWrap)     inputWrap.style.display = 'none';
+        if (activateBtn)   activateBtn.style.display = 'none';
+        if (magicSection)  magicSection.style.display = 'none';
+        if (emailSection)  emailSection.style.display = 'block';
         statusDiv.style.display = 'none';
     } else {
-        if (subtitle)    { subtitle.textContent = 'Enter the code you received to activate this device.'; subtitle.style.color = ''; }
-        if (inputWrap)   inputWrap.style.display = 'block';
-        if (activateBtn) activateBtn.style.display = 'block';
+        if (subtitle)      { subtitle.textContent = 'Enter the code you received to activate this device.'; subtitle.style.color = ''; }
+        if (inputWrap)     inputWrap.style.display = 'block';
+        if (activateBtn)   activateBtn.style.display = 'block';
+        if (magicSection)  magicSection.style.display = 'block';
+        if (emailSection)  emailSection.style.display = 'none';
         statusDiv.style.display = 'none';
     }
 }
@@ -232,3 +239,131 @@ function showActivationPopup() {
         setTimeout(() => popup.remove(), 400);
     }, 5000);
 }
+
+
+// ==========================================
+// EMAIL SAVE - Speichert E-Mail für Magic Link Recovery
+// ==========================================
+
+export async function saveEmailForRecovery(email) {
+    const token    = getToken();
+    const deviceId = getOrCreateDeviceId();
+    if (!token) return { success: false, error: 'Not activated' };
+
+    try {
+        const response = await fetch(`${CONFIG.backendUrl}/api/auth/email`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'X-Device-ID':   deviceId
+            },
+            body: JSON.stringify({ email })
+        });
+        return await response.json();
+    } catch (err) {
+        console.error('[settings] Email save error:', err.message);
+        return { success: false, error: 'Network error' };
+    }
+}
+
+// ==========================================
+// MAGIC LINK REQUEST - Sendet Login-Link per E-Mail
+// ==========================================
+
+export async function requestMagicLink(email) {
+    try {
+        const response = await fetch(`${CONFIG.backendUrl}/api/auth/magic-link`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        return await response.json();
+    } catch (err) {
+        console.error('[settings] Magic link request error:', err.message);
+        return { success: false, error: 'Network error' };
+    }
+}
+// ==========================================
+// MAGIC LINK & EMAIL RECOVERY — Event Listeners
+// ==========================================
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Toggle magic link form visibility
+    const showMagicBtn = document.getElementById('showMagicLinkBtn');
+    if (showMagicBtn) {
+        showMagicBtn.addEventListener('click', () => {
+            const form = document.getElementById('magicLinkForm');
+            if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+    }
+
+    // Send magic link
+    const sendMagicBtn = document.getElementById('sendMagicLinkBtn');
+    if (sendMagicBtn) {
+        sendMagicBtn.addEventListener('click', async () => {
+            const emailInput = document.getElementById('magicLinkEmailInput');
+            const statusDiv  = document.getElementById('magicLinkStatus');
+            const email      = emailInput?.value?.trim();
+
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                if (statusDiv) { statusDiv.style.display = 'block'; statusDiv.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.'; statusDiv.style.color = '#ff6b7a'; }
+                return;
+            }
+
+            sendMagicBtn.disabled = true;
+            sendMagicBtn.textContent = 'Wird gesendet…';
+
+            const result = await requestMagicLink(email);
+
+            sendMagicBtn.disabled = false;
+            sendMagicBtn.textContent = 'Login-Link senden';
+
+            if (statusDiv) {
+                statusDiv.style.display = 'block';
+                if (result.success) {
+                    statusDiv.textContent = '✓ E-Mail gesendet — prüfe deinen Posteingang.';
+                    statusDiv.style.color = '#5fda7d';
+                } else {
+                    statusDiv.textContent = result.error || 'Fehler beim Senden.';
+                    statusDiv.style.color = '#ff6b7a';
+                }
+            }
+        });
+    }
+
+    // Save email for recovery (shown when already activated)
+    const saveEmailBtn = document.getElementById('saveRecoveryEmailBtn');
+    if (saveEmailBtn) {
+        saveEmailBtn.addEventListener('click', async () => {
+            const emailInput = document.getElementById('recoveryEmailInput');
+            const statusDiv  = document.getElementById('recoveryEmailStatus');
+            const email      = emailInput?.value?.trim();
+
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                if (statusDiv) { statusDiv.style.display = 'block'; statusDiv.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.'; statusDiv.style.color = '#ff6b7a'; }
+                return;
+            }
+
+            saveEmailBtn.disabled = true;
+            saveEmailBtn.textContent = 'Wird gespeichert…';
+
+            const result = await saveEmailForRecovery(email);
+
+            saveEmailBtn.disabled = false;
+            saveEmailBtn.textContent = 'Speichern';
+
+            if (statusDiv) {
+                statusDiv.style.display = 'block';
+                if (result.success) {
+                    statusDiv.textContent = '✓ E-Mail gespeichert.';
+                    statusDiv.style.color = '#5fda7d';
+                } else {
+                    statusDiv.textContent = result.error || 'Fehler beim Speichern.';
+                    statusDiv.style.color = '#ff6b7a';
+                }
+            }
+        });
+    }
+});
