@@ -22,7 +22,7 @@ export function openSettings() {
         if (subtitle)      { subtitle.textContent = 'Device already activated'; subtitle.style.color = '#5fda7d'; }
         if (inputWrap)     inputWrap.style.display = 'none';
         if (activateBtn)   activateBtn.style.display = 'none';
-        if (magicSection)  magicSection.style.display = 'none';
+        if (magicSection)  magicSection.style.display = 'block';
         if (emailSection)  emailSection.style.display = 'block';
         statusDiv.style.display = 'none';
     } else {
@@ -377,4 +377,66 @@ export async function requestMagicLink(email) {
             }
         });
     }
+    // Magic link button 2 (shown when activated, for convenience)
+    const showMagicBtn2 = document.getElementById('showMagicLinkBtn2');
+    if (showMagicBtn2) {
+        showMagicBtn2.addEventListener('click', () => {
+            const form = document.getElementById('magicLinkForm2');
+            if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+    }
+    const sendMagicBtn2 = document.getElementById('sendMagicLinkBtn2');
+    if (sendMagicBtn2) {
+        sendMagicBtn2.addEventListener('click', async () => {
+            const emailInput = document.getElementById('magicLinkEmailInput2');
+            const statusDiv  = document.getElementById('magicLinkStatus2');
+            const email      = emailInput?.value?.trim();
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                if (statusDiv) { statusDiv.style.display = 'block'; statusDiv.textContent = 'Bitte E-Mail eingeben.'; statusDiv.style.color = '#ff6b7a'; }
+                return;
+            }
+            sendMagicBtn2.disabled = true;
+            sendMagicBtn2.textContent = 'Wird gesendet...';
+            const result = await requestMagicLink(email);
+            sendMagicBtn2.disabled = false;
+            sendMagicBtn2.textContent = 'Login-Link senden';
+            if (statusDiv) {
+                statusDiv.style.display = 'block';
+                statusDiv.textContent = result.success ? '✓ E-Mail gesendet!' : (result.error || 'Fehler.');
+                statusDiv.style.color = result.success ? '#5fda7d' : '#ff6b7a';
+            }
+        });
+    }
+
 // end settings listeners
+
+// Magic Link Button 2 (eingeloggt-Zustand)
+const showMagicBtn2 = document.getElementById('showMagicLinkBtn2');
+if (showMagicBtn2) {
+    showMagicBtn2.addEventListener('click', () => {
+        const form = document.getElementById('magicLinkForm2');
+        if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    });
+}
+const sendMagicBtn2 = document.getElementById('sendMagicLinkBtn2');
+if (sendMagicBtn2) {
+    sendMagicBtn2.addEventListener('click', async () => {
+        const emailInput = document.getElementById('magicLinkEmailInput2');
+        const statusDiv  = document.getElementById('magicLinkStatus2');
+        const email      = emailInput?.value?.trim();
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            if (statusDiv) { statusDiv.style.display = 'block'; statusDiv.textContent = 'Bitte eine gultige E-Mail eingeben.'; statusDiv.style.color = '#ff6b7a'; }
+            return;
+        }
+        sendMagicBtn2.disabled = true;
+        sendMagicBtn2.textContent = 'Wird gesendet...';
+        const result = await requestMagicLink(email);
+        sendMagicBtn2.disabled = false;
+        sendMagicBtn2.textContent = 'Login-Link senden';
+        if (statusDiv) {
+            statusDiv.style.display = 'block';
+            statusDiv.textContent = result.success ? 'E-Mail gesendet - prufe deinen Posteingang.' : (result.error || 'Fehler beim Senden.');
+            statusDiv.style.color = result.success ? '#5fda7d' : '#ff6b7a';
+        }
+    });
+}
