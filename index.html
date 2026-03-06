@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -84,26 +84,31 @@
                 <button class="cs-btn" id="cameraBtn" aria-label="Coffee Shot">
                     <span class="cs-content">
                         <span class="cs-icon-wrap">
-                            <!-- Coffee Bag + 4 Chevron Arrows -->
+                            <!-- Coffee Bag Icon -->
                             <svg class="cs-viewfinder" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <filter id="invert-white">
-                                    <feColorMatrix type="matrix"
-                                        values="-1 0 0 0 1
-                                                0 -1 0 0 1
-                                                0 0 -1 0 1
-                                                0 0 0 1 0"/>
-                                </filter>
+                                <defs>
+                                    <filter id="bag-glow" x="-35%" y="-35%" width="170%" height="170%">
+                                        <feColorMatrix in="SourceGraphic" type="matrix"
+                                            values="-1 0 0 0 1
+                                                    0 -1 0 0 1
+                                                    0 0 -1 0 1
+                                                    0 0 0 1 0" result="inverted"/>
+                                        <feGaussianBlur in="inverted" stdDeviation="2.8" result="blur"/>
+                                        <feColorMatrix in="blur" type="matrix"
+                                            values="1.6 0.7 0   0 0.10
+                                                    0.7 0.3 0   0 0
+                                                    0   0   0   0 0
+                                                    0   0   0   0.55 0" result="warmglow"/>
+                                        <feMerge>
+                                            <feMergeNode in="warmglow"/>
+                                            <feMergeNode in="inverted"/>
+                                        </feMerge>
+                                    </filter>
+                                </defs>
                                 <image class="cs-bag" href="assets/coffee-bag-shot.png"
                                     x="10" y="6" width="28" height="36"
-                                    filter="url(#invert-white)"
-                                    opacity="0.88"/>
-                                <!-- 4 Chevron arrows pointing at coffee bag -->
-                                <g class="cs-chevrons" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none">
-                                    <path d="M19.4 -1 L24 2.45 L28.6 -1"/>
-                                    <path d="M19.4 49 L24 45.55 L28.6 49"/>
-                                    <path d="M-1 19.4 L2.45 24 L-1 28.6"/>
-                                    <path d="M49 19.4 L45.55 24 L49 28.6"/>
-                                </g>
+                                    filter="url(#bag-glow)"
+                                    opacity="0.92"/>
                             </svg>
                         </span>
                         <span class="cs-text">

@@ -233,7 +233,7 @@ h1 {
     gap: 12px;
     padding: 14px 20px;
     width: 100%;
-    background: linear-gradient(135deg, #2a1a0a 0%, #1e1208 55%, #160d06 100%);
+    background: linear-gradient(135deg, #7a4a20 0%, #5a3210 45%, #3d2008 80%, #2a1508 100%);
     border: none;
     border-radius: 16px;
 }
@@ -241,11 +241,6 @@ h1 {
 body.light-mode .cs-content {
     background: linear-gradient(135deg, #5a3010 0%, #3d200a 55%, #2a1506 100%);
     border: none;
-}
-
-body.light-mode .cs-chevrons {
-    color: #b58752;
-    opacity: 0.96;
 }
 
 body.light-mode .cs-sub {
@@ -274,11 +269,6 @@ body.light-mode .add-section {
     transform-box: fill-box;
     transform-origin: center;
     transform: scale(1.15);
-}
-
-/* Chevron arrows in the Coffee Shot icon ? accent color */ .cs-chevrons {
-    color: var(--accent);
-    opacity: 0.88;
 }
 
 .cs-text {
