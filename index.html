@@ -243,7 +243,7 @@
             <button id="activateDeviceBtn">Activate Device</button>
             <!-- Magic Link Recovery (shown when NOT activated) -->
             <div id="magicLinkSection" style="margin-top: 12px; text-align: center;">
-                <button id="showMagicLinkBtn" onclick="var f=document.getElementById('magicLinkForm');f.style.display=f.style.display==='block'?'none':'block';" style="background: none; border: none; font-size: 0.72rem; color: var(--text-muted, #7a6050); text-decoration: underline; cursor: pointer; padding: 4px 0;">
+                <button id="showMagicLinkBtn" style="background: none; border: none; font-size: 0.72rem; color: var(--text-muted, #7a6050); text-decoration: underline; cursor: pointer; padding: 4px 0;">
                     Browserdaten geloscht? Login-Link anfordern
                 </button>
                 <div id="magicLinkForm" style="display: none; margin-top: 12px;">
@@ -252,26 +252,6 @@
                     </div>
                     <button id="sendMagicLinkBtn" style="width: 100%; font-size: 0.8rem;">Login-Link senden</button>
                     <div id="magicLinkStatus" style="margin-top: 8px; font-size: 0.72rem; color: var(--text-muted, #7a6050); display: none;"></div>
-                </div>
-            </div>
-
-            <!-- Email for Recovery (shown when ACTIVATED) -->
-            <div id="emailRecoverySection" style="display: none; margin-top: 16px;">
-                <p style="font-size: 0.72rem; color: var(--text-muted, #7a6050); margin-bottom: 8px;">E-Mail fur Login-Link (optional)</p>
-                <div style="display: flex; gap: 8px;">
-                    <input type="email" id="recoveryEmailInput" placeholder="deine@email.de" style="flex: 1; font-size: 0.78rem;">
-                    <button id="saveRecoveryEmailBtn" style="font-size: 0.75rem; padding: 8px 12px; white-space: nowrap;">Speichern</button>
-                </div>
-                <div id="recoveryEmailStatus" style="font-size: 0.68rem; margin-top: 6px; display: none;"></div>
-                <div style="margin-top: 10px; text-align: center;">
-                    <button id="showMagicLinkBtn2" onclick="var f=document.getElementById('magicLinkForm2');f.style.display=f.style.display==='block'?'none':'block';" style="background: none; border: none; font-size: 0.72rem; color: var(--text-muted, #7a6050); text-decoration: underline; cursor: pointer; padding: 4px 0;">
-                        Login-Link per E-Mail anfordern
-                    </button>
-                    <div id="magicLinkForm2" style="display: none; margin-top: 12px;">
-                        <input type="email" id="magicLinkEmailInput2" placeholder="Deine E-Mail-Adresse" style="width: 100%; margin-bottom: 8px;">
-                        <button id="sendMagicLinkBtn2" style="width: 100%; font-size: 0.8rem;">Login-Link senden</button>
-                        <div id="magicLinkStatus2" style="margin-top: 8px; font-size: 0.72rem; display: none;"></div>
-                    </div>
                 </div>
             </div>
 

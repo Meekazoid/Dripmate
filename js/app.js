@@ -26,7 +26,6 @@ import {
     openDecafModal,
     closeDecafModal,
     handleMagicLink,
-    saveEmailForRecovery,
     requestMagicLink
 } from './settings.js';
 import { updateRoastDate } from './freshness.js';
@@ -103,7 +102,7 @@ function initEventListeners() {
         }); 
     });
 
-    // Magic Link Toggle
+    // Magic Link Toggle (not activated state)
     const showMagicBtn = document.getElementById('showMagicLinkBtn');
     if (showMagicBtn) {
         showMagicBtn.addEventListener('click', () => {
@@ -111,7 +110,6 @@ function initEventListeners() {
             if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
         });
     }
-
     // Send Magic Link
     const sendMagicBtn = document.getElementById('sendMagicLinkBtn');
     if (sendMagicBtn) {
@@ -130,23 +128,6 @@ function initEventListeners() {
                 : (result.error || 'Fehler beim Senden.');
         });
     }
-
-    // Save Recovery Email (shown when already activated)
-    const saveEmailBtn = document.getElementById('saveRecoveryEmailBtn');
-    if (saveEmailBtn) {
-        saveEmailBtn.addEventListener('click', async () => {
-            const email  = document.getElementById('recoveryEmailInput').value.trim();
-            const status = document.getElementById('recoveryEmailStatus');
-            if (!email) return;
-            saveEmailBtn.disabled = true;
-            const result = await saveEmailForRecovery(email);
-            saveEmailBtn.disabled = false;
-            status.style.display = 'block';
-            status.style.color = result.success ? '#5fda7d' : '#ff6b7a';
-            status.textContent = result.success ? '✓ E-Mail gespeichert' : (result.error || 'Fehler');
-        });
-    }
-
     // Impressum & Datenschutz
     document.getElementById('openImpressumBtn').addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); openModal('impressumModal'); });
     document.getElementById('closeImpressumBtn').addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); closeModal('impressumModal'); });
