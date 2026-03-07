@@ -118,13 +118,13 @@ function initEventListeners() {
             const status = document.getElementById('magicLinkStatus');
             if (!email) { status.textContent = 'Bitte E-Mail eingeben.'; status.style.display = 'block'; return; }
             sendMagicBtn.disabled = true;
-            sendMagicBtn.textContent = 'Wird gesendet…';
+            sendMagicBtn.textContent = 'Sending…';
             const result = await requestMagicLink(email);
             sendMagicBtn.disabled = false;
-            sendMagicBtn.textContent = 'Login-Link senden';
+            sendMagicBtn.textContent = 'Send Login-Link';
             status.style.display = 'block';
             status.textContent = result.success
-                ? '✓ Link gesendet — schau in dein Postfach!'
+                ? '✓ Link send — check your Mail!'
                 : (result.error || 'Fehler beim Senden.');
         });
     }
