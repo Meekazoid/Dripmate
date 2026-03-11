@@ -174,7 +174,8 @@ export async function handleMagicLink() {
 
         if (validateResult.valid) {
             trackAuthBootstrap('auth_bootstrap_magic_success');
-            showActivationPopup('recovery');
+            const popupMode = validateResult.isFirstLogin ? 'firstLogin' : 'recovery';
+            showActivationPopup(popupMode);
             await maybeInitBackendSync();
             return;
         }
@@ -211,7 +212,7 @@ async function validateAndPersistToken(token) {
 
         saveToken(token);
         localStorage.setItem('deviceId', deviceId);
-        return { valid: true };
+        return { valid: true, isFirstLogin: Boolean(data.isFirstLogin) };
     } finally {
         clearTimeout(timer);
     }
