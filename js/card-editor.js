@@ -11,6 +11,22 @@ import { coffees, saveCoffeesAndSync, sanitizeHTML } from './state.js';
 const PENCIL_SVG = '<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>';
 const CHECK_SVG  = '<polyline points="20 6 9 17 4 12"></polyline>';
 
+function formatCoffeeOrigin(origin = '') {
+    const originText = String(origin || '').trim();
+    if (!originText) return '';
+
+    const parts = originText
+        .split(/[•,]/)
+        .map(part => part.trim())
+        .filter(Boolean);
+
+    const normalized = parts.length > 1
+        ? `${parts[0]} • ${parts.slice(1).join(' ')}`
+        : parts[0];
+
+    return normalized.toLocaleUpperCase('de-DE');
+}
+
 /**
  * Toggle between display and edit mode for a coffee card.
  * Called from inline onclick handlers in the card template.
@@ -70,11 +86,21 @@ function enterEditMode(index, card) {
             <input type="text"
                    class="inline-edit-input edit-origin"
                    id="origin-edit-${index}"
-                   value="${escapeAttr(coffee.origin)}"
+                   value="${escapeAttr(formatCoffeeOrigin(coffee.origin))}"
                    placeholder="Origin"
                    onclick="event.stopPropagation();"
                    onkeydown="if(event.key==='Enter'){event.preventDefault(); toggleEditMode(${index});}"
             />`;
+
+        const originInput = document.getElementById(`origin-edit-${index}`);
+        if (originInput) {
+            originInput.addEventListener('input', () => {
+                originInput.value = formatCoffeeOrigin(originInput.value);
+            });
+            originInput.addEventListener('blur', () => {
+                originInput.value = formatCoffeeOrigin(originInput.value);
+            });
+        }
     }
 
     // No auto-focus: on Android, calling focus() immediately triggers the blue
@@ -93,7 +119,10 @@ async function saveEdits(index, card) {
     const roasteryInput = document.getElementById(`roastery-edit-${index}`);
 
     const newName     = nameInput?.value.trim()     || coffee.name;
-    const newOrigin   = originInput?.value.trim()   || coffee.origin;
+    const originInputValue = originInput?.value.trim();
+    const newOrigin   = originInputValue
+        ? formatCoffeeOrigin(originInputValue)
+        : formatCoffeeOrigin(coffee.origin);
     const newRoastery = roasteryInput?.value.trim() || '';
 
     // Optimistic UI: update local state immediately
@@ -181,6 +210,7 @@ async function patchBrewToBackend(index, updates) {
             console.log('[editor] Card updated via PATCH:', data);
             if (data.coffee) {
                 Object.assign(coffees[index], data.coffee);
+                coffees[index].origin = formatCoffeeOrigin(coffees[index].origin);
                 localStorage.setItem('coffees', JSON.stringify(coffees));
             }
         } else {
