@@ -836,7 +836,10 @@ body.light-mode .coffee-card:hover .coffee-name {
 
 .coffee-origin {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
@@ -2981,7 +2984,11 @@ body.light-mode .edit-btn.editing {
 
 /* Origin-Input */
 .coffee-card .inline-edit-input.edit-origin {
-    font-size: 0.95rem;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
     color: var(--text-secondary);
 }
 
