@@ -585,7 +585,7 @@ body.light-mode .brew-chip:focus, body.light-mode .brew-chip:focus-visible {
     flex-shrink: 0;
     color: var(--accent);
     opacity: 0.45;
-    margin-left: 0;
+    margin-left: 2px;
 }
 
 body.light-mode .brew-chip {
