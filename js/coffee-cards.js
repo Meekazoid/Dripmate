@@ -113,6 +113,8 @@ export function renderCoffeeCard(coffee, index) {
     const hasVariety = coffee.cultivar && coffee.cultivar !== 'Unknown';
     const hasAltitude = coffee.altitude && coffee.altitude !== '1500';
     const hasTastingNotes = coffee.tastingNotes && coffee.tastingNotes !== 'No notes';
+    const originRawSanitized = sanitizeHTML(coffee.origin);
+    const originDisplaySanitized = sanitizeHTML(formatCoffeeOrigin(coffee.origin));
 
     const extraInfoHTML = (hasVariety || hasAltitude || hasTastingNotes) ? `
                 <div class="coffee-extra-info">
@@ -128,7 +130,7 @@ export function renderCoffeeCard(coffee, index) {
                 <div>
                     ${roasteryHTML}
                     <div class="coffee-name" id="name-display-${index}">${sanitizeHTML(coffee.name)}</div>
-                    <div class="coffee-origin" id="origin-display-${index}">${sanitizeHTML(formatCoffeeOrigin(coffee.origin))}</div>
+                    <div class="coffee-origin" id="origin-display-${index}" data-origin-raw="${originRawSanitized}">${originDisplaySanitized}</div>
                 </div>
 
                 <div style="display: flex; gap: 8px; align-items: flex-start;">
