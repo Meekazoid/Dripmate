@@ -844,7 +844,7 @@ body.light-mode .coffee-card.expanded {
     transition: margin-top 0.2s ease;
 }
 .coffee-card.editing .coffee-header-text {
-    margin-top: 44px;
+    margin-top: 40px;
 }
 
 .color-picker-btn {
@@ -859,6 +859,17 @@ body.light-mode .coffee-card.expanded {
     justify-content: center;
     color: var(--text-secondary);
     padding: 0;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.color-picker-btn:hover,
+.color-picker-btn:active,
+.color-picker-btn:focus,
+.color-picker-btn:focus-visible {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    outline: none;
 }
 
 .color-picker-popup {
@@ -3162,11 +3173,6 @@ body.light-mode .coffee-card .inline-edit-input {
 body.light-mode .coffee-card .inline-edit-input:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 2px rgba(139, 90, 43, 0.12);
-}
-
-/* -- Fix: Im Edit-Modus Textfelder unter die Buttons r?cken -- */
-.coffee-card.editing .coffee-header > div:first-child {
-    padding-top: 28px;
 }
 
 /* -- Edit-Button Hover-Glow im Editing-State -- */
