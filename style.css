@@ -850,7 +850,7 @@ body.light-mode .coffee-card.expanded {
 .color-picker-btn {
     width: 32px;
     height: 32px;
-    background: var(--bg-secondary);
+    background: transparent;
     border: 1px solid var(--border);
     border-radius: 10px;
     cursor: pointer;
