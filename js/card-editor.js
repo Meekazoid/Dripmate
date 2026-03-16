@@ -175,8 +175,17 @@ function replaceInputWithDisplay(inputEl, className, id, value, hidden = false) 
     const div = document.createElement('div');
     div.className = className;
     div.id        = id;
-    div.textContent = value;
-    if (hidden) div.style.display = 'none';
+    
+    if (hidden) {
+        // Setze den unsichtbaren Platzhalter für konsistente Kartenhöhen
+        div.innerHTML = '&nbsp;';
+        div.style.visibility = 'hidden';
+    } else {
+        // Da "value" aus der saveEdits-Funktion bereits durch sanitizeHTML() 
+        // gelaufen ist, können wir hier sicher innerHTML nutzen.
+        div.innerHTML = value; 
+    }
+    
     inputEl.replaceWith(div);
 }
 
