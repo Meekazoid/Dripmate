@@ -111,12 +111,15 @@ function enterEditMode(index, card) {
         const safeDisplay = displayLabel === 'unknown' ? 'Processing Method' : displayLabel;
         
         processDisplay.outerHTML = `
-            <div class="inline-edit-input edit-process"
+            <div class="coffee-process-small inline-edit-input edit-process"
                  id="process-edit-${index}"
                  data-value="${escapeAttr(coffee.process || '')}"
                  tabindex="0"
-                 style="cursor: pointer; text-align: left; width: 100%; min-height: 42px; display: flex; align-items: center;"
-                 onclick="event.stopPropagation(); window.openCardProcessPicker(${index});">
+                 role="button"
+                 aria-label="Choose processing method"
+                 style="cursor: pointer; text-align: left; width: 100%; min-height: 42px; display: flex; align-items: center; pointer-events: auto;"
+                 onclick="event.stopPropagation(); window.openCardProcessPicker(${index});"
+                 onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault(); event.stopPropagation(); window.openCardProcessPicker(${index});}">
                  ${escapeAttr(safeDisplay)}
             </div>`;
     }
@@ -265,16 +268,20 @@ async function saveEdits(index, card) {
     // Persist locally
     localStorage.setItem('coffees', JSON.stringify(coffees));
 
-    // Backend PATCH with full-sync fallback on failure
-    await patchBrewToBackend(index, {
-        coffee_name: newName,
+    const canonicalUpdates = {
+        name: newName,
         origin: newOrigin,
         roastery: newRoastery,
         process: newProcess,
         cultivar: newCultivar,
         tastingNotes: newTasting,
         colorTag: newColor
-    });
+    };
+
+    const patchPayload = buildPatchPayload(canonicalUpdates);
+
+    // Backend PATCH with full-sync fallback on failure
+    await patchBrewToBackend(index, patchPayload, canonicalUpdates);
 }
 
 /**
@@ -308,10 +315,53 @@ function escapeAttr(str) {
 }
 
 /**
+ * Return a shallow copy without undefined values.
+ * Keeps null values intact (used to explicitly clear fields like colorTag).
+ */
+function omitUndefinedFields(obj = {}) {
+    return Object.fromEntries(
+        Object.entries(obj).filter(([, value]) => value !== undefined)
+    );
+}
+
+/**
+ * Build PATCH payload including legacy aliases for backend compatibility.
+ * Keeps saveEdits readable while preserving resilient sync behavior.
+ */
+function buildPatchPayload(canonicalUpdates = {}) {
+    const {
+        name,
+        origin,
+        roastery,
+        process,
+        cultivar,
+        tastingNotes,
+        colorTag
+    } = canonicalUpdates;
+
+    return omitUndefinedFields({
+        // canonical
+        name,
+        origin,
+        roastery,
+        process,
+        cultivar,
+        tastingNotes,
+        colorTag,
+
+        // legacy aliases
+        coffee_name: name,
+        variety: cultivar,
+        tasting_notes: tastingNotes,
+        color_tag: colorTag
+    });
+}
+
+/**
  * PATCH a single coffee card to the backend (partial update).
  * Falls back to a full saveCoffeesAndSync() if the PATCH fails.
  */
-async function patchBrewToBackend(index, updates) {
+async function patchBrewToBackend(index, updates, canonicalUpdates = {}) {
     const token    = getToken();
     const deviceId = localStorage.getItem('deviceId');
 
@@ -344,6 +394,11 @@ async function patchBrewToBackend(index, updates) {
             console.log('[editor] Card updated via PATCH:', data);
             if (data.coffee) {
                 Object.assign(coffees[index], data.coffee);
+
+                // Preserve edited fields if backend returns a partial/stale coffee payload.
+                // This avoids local rollback on reload for process/cultivar/tasting notes.
+                Object.assign(coffees[index], omitUndefinedFields(canonicalUpdates));
+
                 coffees[index].origin = formatCoffeeOrigin(coffees[index].origin);
                 localStorage.setItem('coffees', JSON.stringify(coffees));
             }
