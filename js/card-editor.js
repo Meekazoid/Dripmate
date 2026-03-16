@@ -104,7 +104,7 @@ function enterEditMode(index, card) {
         }
     }
 
-// Process — Readonly-Input, öffnet beim Klick das Modal
+// Process — Div (sieht aus wie ein Input, aber fängt Klicks zuverlässig ab!)
     const processDisplay = document.getElementById(`process-display-${index}`);
     if (processDisplay) {
         const displayLabel = PROCESS_LABELS[coffee.process] || coffee.process || 'Unknown';
@@ -115,7 +115,7 @@ function enterEditMode(index, card) {
                  id="process-edit-${index}"
                  data-value="${escapeAttr(coffee.process || '')}"
                  tabindex="0"
-                 style="cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; min-height: 30px; padding: 5px;"
+                 style="cursor: pointer; text-align: left; width: 100%; min-height: 42px; display: flex; align-items: center;"
                  onclick="event.stopPropagation(); window.openCardProcessPicker(${index});">
                  ${escapeAttr(safeDisplay)}
             </div>`;
