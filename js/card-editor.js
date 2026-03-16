@@ -227,8 +227,11 @@ async function saveEdits(index, card) {
     replaceInputWithDisplay(nameInput,     'coffee-name',     `name-display-${index}`,     sanitizeHTML(newName));
     replaceInputWithDisplay(originInput,   'coffee-origin',   `origin-display-${index}`,   sanitizeHTML(newOrigin));
 
+    // --- ÄNDERUNG START: Processing Method unsichtbar machen, wenn leer ---
     const displayLabel = PROCESS_LABELS[newProcess] || newProcess || 'unknown';
-    replaceInputWithDisplay(processInput, 'coffee-process-small', `process-display-${index}`, sanitizeHTML(displayLabel));
+    const isProcessEmpty = (!newProcess || newProcess.toLowerCase() === 'unknown' || newProcess === '- optional -');
+    replaceInputWithDisplay(processInput, 'coffee-process-small', `process-display-${index}`, sanitizeHTML(displayLabel), isProcessEmpty);
+    // --- ÄNDERUNG ENDE ---
 
     replaceInputWithDisplay(cultivarInput, 'extra-value', `cultivar-display-${index}`, sanitizeHTML(newCultivar === 'Unknown' ? '' : newCultivar));
     replaceInputWithDisplay(tastingInput, 'extra-value', `tasting-display-${index}`, sanitizeHTML(newTasting === 'No notes' ? '' : newTasting));
