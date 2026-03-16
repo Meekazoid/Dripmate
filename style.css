@@ -789,7 +789,11 @@ body.light-mode .picker-option.active {
 .coffee-card {
     background: var(--bg-secondary);
     border: 1px solid var(--border);
+<<<<<<< codex/update-.coffee-card-design-to-implement-light-guide-djr7lp
     border-left: 4px solid var(--card-accent-color, var(--accent));
+=======
+    border-left: 3px solid var(--card-accent-color, var(--accent));
+>>>>>>> main
     border-radius: 16px;
     padding: 24px;
     cursor: pointer;
@@ -804,7 +808,11 @@ body.light-mode .picker-option.active {
 
 body.light-mode .coffee-card {
     background: var(--bg-secondary);
+<<<<<<< codex/update-.coffee-card-design-to-implement-light-guide-djr7lp
     border-left: 4px solid var(--card-accent-color, var(--accent));
+=======
+    border-left: 3px solid var(--card-accent-color, var(--accent));
+>>>>>>> main
 }
 
 .coffee-card::before {
