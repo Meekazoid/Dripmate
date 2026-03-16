@@ -40,7 +40,12 @@ function selectProcess(value) {
         const btn = document.getElementById(`process-edit-${window.currentProcessEditIndex}`);
         if (btn) {
             btn.dataset.value = value;
-            btn.textContent = PROCESS_LABELS[value] || value || 'Unknown';
+            const newText = PROCESS_LABELS[value] || value || 'Unknown';
+            if (btn.tagName === 'INPUT') {
+                btn.value = newText;
+            } else {
+                btn.textContent = newText;
+            }
         }
         closeProcessPicker();
         window.currentProcessEditIndex = null;

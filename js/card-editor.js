@@ -108,17 +108,17 @@ function enterEditMode(index, card) {
     const processDisplay = document.getElementById(`process-display-${index}`);
     if (processDisplay) {
         const displayLabel = PROCESS_LABELS[coffee.process] || coffee.process || 'Unknown';
+        const safeDisplay = displayLabel === 'unknown' ? 'Processing Method' : displayLabel;
+        
         processDisplay.outerHTML = `
-            <input type="text"
-                   readonly
-                   class="inline-edit-input edit-process"
-                   id="process-edit-${index}"
-                   data-value="${escapeAttr(coffee.process || '')}"
-                   value="${escapeAttr(displayLabel)}"
-                   placeholder="Processing Method"
-                   style="cursor: pointer; text-align: left; width: 100%;"
-                   onclick="event.stopPropagation(); window.openCardProcessPicker(${index});"
-            />`;
+            <div class="inline-edit-input edit-process"
+                 id="process-edit-${index}"
+                 data-value="${escapeAttr(coffee.process || '')}"
+                 tabindex="0"
+                 style="cursor: pointer; text-align: left; width: 100%; display: flex; align-items: center; min-height: 30px; padding: 5px;"
+                 onclick="event.stopPropagation(); window.openCardProcessPicker(${index});">
+                 ${escapeAttr(safeDisplay)}
+            </div>`;
     }
 
     // Container sichtbar machen, falls er versteckt war
