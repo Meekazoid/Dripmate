@@ -6,6 +6,7 @@
 import { CONFIG } from './config.js';
 import { getToken } from './services/backend-sync.js';
 import { coffees, saveCoffeesAndSync, sanitizeHTML } from './state.js';
+import { PROCESS_LABELS } from './manual-entry.js';
 
 // SVG paths for edit/save icon toggle
 const PENCIL_SVG = '<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>';
@@ -103,6 +104,71 @@ function enterEditMode(index, card) {
         }
     }
 
+    // Process — Readonly-Input, öffnet beim Klick das Modal
+    const processDisplay = document.getElementById(`process-display-${index}`);
+    if (processDisplay) {
+        const displayLabel = PROCESS_LABELS[coffee.process] || coffee.process || 'Unknown';
+        processDisplay.outerHTML = `
+            <input type="text"
+                   readonly
+                   class="inline-edit-input edit-process"
+                   id="process-edit-${index}"
+                   data-value="${escapeAttr(coffee.process || '')}"
+                   value="${escapeAttr(displayLabel)}"
+                   placeholder="Processing Method"
+                   style="cursor: pointer; text-align: left; width: 100%;"
+                   onclick="event.stopPropagation(); window.openCardProcessPicker(${index});"
+            />`;
+    }
+
+    // Container sichtbar machen, falls er versteckt war
+    const extraInfo = document.getElementById(`extra-info-${index}`);
+    if (extraInfo) extraInfo.style.display = 'block';
+
+    // Variety / Cultivar — Input
+    const cultivarLine = document.getElementById(`cultivar-line-${index}`);
+    const cultivarDisplay = document.getElementById(`cultivar-display-${index}`);
+    if (cultivarLine) {
+        cultivarLine.style.display = 'flex';
+        const cultivarLabel = cultivarLine.querySelector('.extra-label');
+        if (cultivarLabel) cultivarLabel.style.display = 'none';
+    }
+    if (cultivarDisplay) {
+        const currentVal = coffee.cultivar === 'Unknown' ? '' : coffee.cultivar;
+        cultivarDisplay.outerHTML = `
+            <input type="text"
+                   class="inline-edit-input edit-cultivar"
+                   id="cultivar-edit-${index}"
+                   value="${escapeAttr(currentVal)}"
+                   placeholder="Variety"
+                   style="text-align: left; width: 100%;"
+                   onclick="event.stopPropagation();"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault(); toggleEditMode(${index});}"
+            />`;
+    }
+
+    // Tasting Notes — Input
+    const tastingLine = document.getElementById(`tasting-line-${index}`);
+    const tastingDisplay = document.getElementById(`tasting-display-${index}`);
+    if (tastingLine) {
+        tastingLine.style.display = 'flex';
+        const tastingLabel = tastingLine.querySelector('.extra-label');
+        if (tastingLabel) tastingLabel.style.display = 'none';
+    }
+    if (tastingDisplay) {
+        const currentVal = coffee.tastingNotes === 'No notes' ? '' : coffee.tastingNotes;
+        tastingDisplay.outerHTML = `
+            <input type="text"
+                   class="inline-edit-input edit-tasting"
+                   id="tasting-edit-${index}"
+                   value="${escapeAttr(currentVal)}"
+                   placeholder="Tasting Notes"
+                   style="text-align: left; width: 100%;"
+                   onclick="event.stopPropagation();"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault(); toggleEditMode(${index});}"
+            />`;
+    }
+
     // No auto-focus: on Android, calling focus() immediately triggers the blue
     // text selection highlight, which looks unintentional. The user taps the
     // field they want to edit themselves.
@@ -117,6 +183,9 @@ async function saveEdits(index, card) {
     const nameInput     = document.getElementById(`name-edit-${index}`);
     const originInput   = document.getElementById(`origin-edit-${index}`);
     const roasteryInput = document.getElementById(`roastery-edit-${index}`);
+    const processInput  = document.getElementById(`process-edit-${index}`);
+    const cultivarInput = document.getElementById(`cultivar-edit-${index}`);
+    const tastingInput  = document.getElementById(`tasting-edit-${index}`);
 
     const newName     = nameInput?.value.trim()     || coffee.name;
     const originInputValue = originInput?.value.trim();
@@ -124,15 +193,21 @@ async function saveEdits(index, card) {
         ? formatCoffeeOrigin(originInputValue)
         : formatCoffeeOrigin(coffee.origin);
     const newRoastery = roasteryInput?.value.trim() || '';
+    const newProcess  = processInput ? processInput.dataset.value : coffee.process;
+    const newCultivar = cultivarInput?.value.trim() || 'Unknown';
+    const newTasting  = tastingInput?.value.trim() || 'No notes';
 
     // Neue Farbe abrufen (wenn sie geändert wurde)
     const tempColor = card.dataset.tempColor;
     const newColor  = tempColor !== undefined ? (tempColor === '' ? null : tempColor) : coffee.colorTag;
 
     // Optimistic UI: update local state immediately
-    coffee.name     = newName;
-    coffee.origin   = newOrigin;
-    coffee.roastery = newRoastery;
+    coffee.name         = newName;
+    coffee.origin       = newOrigin;
+    coffee.roastery     = newRoastery;
+    coffee.process      = newProcess;
+    coffee.cultivar     = newCultivar;
+    coffee.tastingNotes = newTasting;
     if (tempColor !== undefined) {
         coffee.colorTag = newColor;
     }
@@ -152,6 +227,36 @@ async function saveEdits(index, card) {
     replaceInputWithDisplay(nameInput,     'coffee-name',     `name-display-${index}`,     sanitizeHTML(newName));
     replaceInputWithDisplay(originInput,   'coffee-origin',   `origin-display-${index}`,   sanitizeHTML(newOrigin));
 
+    const displayLabel = PROCESS_LABELS[newProcess] || newProcess || 'unknown';
+    replaceInputWithDisplay(processInput, 'coffee-process-small', `process-display-${index}`, sanitizeHTML(displayLabel));
+
+    replaceInputWithDisplay(cultivarInput, 'extra-value', `cultivar-display-${index}`, sanitizeHTML(newCultivar === 'Unknown' ? '' : newCultivar));
+    replaceInputWithDisplay(tastingInput, 'extra-value', `tasting-display-${index}`, sanitizeHTML(newTasting === 'No notes' ? '' : newTasting));
+
+    const cultivarLine = document.getElementById(`cultivar-line-${index}`);
+    if (cultivarLine) {
+        const cultivarLabel = cultivarLine.querySelector('.extra-label');
+        if (cultivarLabel) cultivarLabel.style.display = '';
+        cultivarLine.style.display = (newCultivar === 'Unknown' || newCultivar === '') ? 'none' : 'flex';
+    }
+
+    const tastingLine = document.getElementById(`tasting-line-${index}`);
+    if (tastingLine) {
+        const tastingLabel = tastingLine.querySelector('.extra-label');
+        if (tastingLabel) tastingLabel.style.display = '';
+        tastingLine.style.display = (newTasting === 'No notes' || newTasting === '') ? 'none' : 'flex';
+    }
+
+    const extraInfo = document.getElementById(`extra-info-${index}`);
+    const hasAltitude = coffee.altitude && coffee.altitude !== '1500';
+    if (extraInfo) {
+        if ((newCultivar === 'Unknown' || newCultivar === '') &&
+            (newTasting === 'No notes' || newTasting === '') &&
+            !hasAltitude) {
+            extraInfo.style.display = 'none';
+        }
+    }
+
     // Temporären Farbspeicher leeren
     delete card.dataset.tempColor;
 
@@ -163,6 +268,9 @@ async function saveEdits(index, card) {
         coffee_name: newName,
         origin: newOrigin,
         roastery: newRoastery,
+        process: newProcess,
+        cultivar: newCultivar,
+        tastingNotes: newTasting,
         colorTag: newColor
     });
 }
@@ -306,3 +414,21 @@ window.selectColor = selectColor;
 
 // Register on window for onclick handlers in card templates
 window.toggleEditMode = toggleEditMode;
+
+// NEU: Globale Funktion um das Process Modal für den Card-Editor aufzurufen
+window.openCardProcessPicker = function(index) {
+    window.currentProcessEditIndex = index;
+    const modal = document.getElementById('processModal');
+    const processBtn = document.getElementById(`process-edit-${index}`);
+    const currentValue = processBtn ? processBtn.dataset.value : '';
+
+    // Aktive Option im Modal markieren
+    const list = document.getElementById('process-picker-list');
+    if (list) {
+        list.querySelectorAll('.picker-option').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.value === currentValue);
+        });
+    }
+
+    if (modal) modal.classList.add('active');
+};

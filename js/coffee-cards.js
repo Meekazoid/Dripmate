@@ -105,15 +105,17 @@ export function renderCoffeeCard(coffee, index) {
         `<div class="color-swatch ${currentHex === color ? 'active' : ''}" data-color="${color}" style="background-color: ${color};" onclick="event.stopPropagation(); window.selectColor(${index}, '${color}');"></div>`
     ).join('');
 
-    // Roastery: Wenn leer, unsichtbar rendern (visibility: hidden) für konsistente Höhe
-    const roasteryHTML = (coffee.roastery && coffee.roastery !== 'Unknown' && coffee.roastery.trim() !== '')
+    // Roastery: bei leerem/unbekanntem Wert unsichtbaren Platzhalter rendern (konstante Kartenhöhe)
+    const hasRoastery = coffee.roastery && coffee.roastery !== 'Unknown' && coffee.roastery.trim() !== '';
+    const roasteryHTML = hasRoastery
         ? `<div class="coffee-roastery" id="roastery-display-${index}">${sanitizeHTML(coffee.roastery)}</div>`
         : `<div class="coffee-roastery" id="roastery-display-${index}" style="visibility: hidden;">&nbsp;</div>`;
 
-    // Process: Wenn leer, unsichtbar rendern für konsistente Höhe
-    const processHTML = (coffee.process && coffee.process !== 'unknown' && coffee.process.trim() !== '')
-        ? `<div class="coffee-process-small">${sanitizeHTML(coffee.process)}</div>`
-        : `<div class="coffee-process-small" style="visibility: hidden;">&nbsp;</div>`;
+    // Process: bei leerem/unbekanntem Wert unsichtbaren Platzhalter rendern (konstante Kartenhöhe)
+    const hasProcess = coffee.process && coffee.process.toLowerCase() !== 'unknown' && coffee.process.trim() !== '';
+    const processHTML = hasProcess
+        ? `<div class="coffee-process-small" id="process-display-${index}">${sanitizeHTML(coffee.process)}</div>`
+        : `<div class="coffee-process-small" id="process-display-${index}" style="visibility: hidden;">&nbsp;</div>`;
 
     // NEU: Getrennte Logik für Sanitization (löst die Test-Assertions)
     const rawSanitizedOrigin = sanitizeHTML(coffee.origin);
@@ -123,12 +125,21 @@ export function renderCoffeeCard(coffee, index) {
     const hasAltitude = coffee.altitude && coffee.altitude !== '1500';
     const hasTastingNotes = coffee.tastingNotes && coffee.tastingNotes !== 'No notes';
 
-    const extraInfoHTML = (hasVariety || hasAltitude || hasTastingNotes) ? `
-                <div class="coffee-extra-info">
-                    ${hasVariety ? `<div class="coffee-extra-line"><span class="extra-label">Variety</span><span class="extra-value">${sanitizeHTML(coffee.cultivar)}</span></div>` : ''}
-                    ${hasAltitude ? `<div class="coffee-extra-line"><span class="extra-label">Altitude</span><span class="extra-value">${sanitizeHTML(coffee.altitude)} masl</span></div>` : ''}
-                    ${hasTastingNotes ? `<div class="coffee-extra-line"><span class="extra-label">Tasting Notes</span><span class="extra-value">${sanitizeHTML(coffee.tastingNotes)}</span></div>` : ''}
-                </div>` : '';
+    const extraInfoHTML = `
+                <div class="coffee-extra-info" id="extra-info-${index}" style="${(!hasVariety && !hasAltitude && !hasTastingNotes) ? 'display:none;' : ''}">
+                    <div class="coffee-extra-line" id="cultivar-line-${index}" style="${!hasVariety ? 'display:none;' : ''}">
+                        <span class="extra-label">Variety</span>
+                        <span class="extra-value" id="cultivar-display-${index}">${sanitizeHTML(hasVariety ? coffee.cultivar : '')}</span>
+                    </div>
+                    <div class="coffee-extra-line" id="altitude-line-${index}" style="${!hasAltitude ? 'display:none;' : ''}">
+                        <span class="extra-label">Altitude</span>
+                        <span class="extra-value" id="altitude-display-${index}">${sanitizeHTML(hasAltitude ? coffee.altitude : '')} masl</span>
+                    </div>
+                    <div class="coffee-extra-line" id="tasting-line-${index}" style="${!hasTastingNotes ? 'display:none;' : ''}">
+                        <span class="extra-label">Tasting Notes</span>
+                        <span class="extra-value" id="tasting-display-${index}">${sanitizeHTML(hasTastingNotes ? coffee.tastingNotes : '')}</span>
+                    </div>
+                </div>`;
 
     return `
         <div class="coffee-card" data-original-index="${index}" style="${colorStyle}">
