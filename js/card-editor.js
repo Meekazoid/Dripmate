@@ -6,7 +6,7 @@
 import { CONFIG } from './config.js';
 import { getToken } from './services/backend-sync.js';
 import { coffees, saveCoffeesAndSync, sanitizeHTML } from './state.js';
-import { PROCESS_LABELS } from './coffee-schema.js'; // <-- GEÄNDERT: Neues Ziel!
+import { PROCESS_LABELS } from './coffee-schema.js';
 
 // SVG paths for edit/save icon toggle
 const PENCIL_SVG = '<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>';
@@ -150,6 +150,30 @@ function enterEditMode(index, card) {
             />`;
     }
 
+    // Altitude — Input (NEU)
+    const altitudeLine = document.getElementById(`altitude-line-${index}`);
+    const altitudeDisplay = document.getElementById(`altitude-display-${index}`);
+    const altitudeUnit = document.getElementById(`altitude-unit-${index}`);
+    if (altitudeLine) {
+        altitudeLine.style.display = 'flex';
+        const altitudeLabel = altitudeLine.querySelector('.extra-label');
+        if (altitudeLabel) altitudeLabel.style.display = 'none';
+        if (altitudeUnit) altitudeUnit.style.display = 'none';
+    }
+    if (altitudeDisplay) {
+        const currentVal = (coffee.altitude === '1500' || !coffee.altitude) ? '' : coffee.altitude;
+        altitudeDisplay.outerHTML = `
+            <input type="text"
+                   class="inline-edit-input edit-altitude"
+                   id="altitude-edit-${index}"
+                   value="${escapeAttr(currentVal)}"
+                   placeholder="Altitude (masl)"
+                   style="text-align: left; width: 100%;"
+                   onclick="event.stopPropagation();"
+                   onkeydown="if(event.key==='Enter'){event.preventDefault(); toggleEditMode(${index});}"
+            />`;
+    }
+
     // Tasting Notes — Input
     const tastingLine = document.getElementById(`tasting-line-${index}`);
     const tastingDisplay = document.getElementById(`tasting-display-${index}`);
@@ -171,9 +195,6 @@ function enterEditMode(index, card) {
                    onkeydown="if(event.key==='Enter'){event.preventDefault(); toggleEditMode(${index});}"
             />`;
     }
-
-    // No auto-focus: on Android, calling focus() immediately triggers the blue
-    // text selection highlight, which looks unintentional.
 }
 
 /**
@@ -187,6 +208,7 @@ async function saveEdits(index, card) {
     const roasteryInput = document.getElementById(`roastery-edit-${index}`);
     const processInput  = document.getElementById(`process-edit-${index}`);
     const cultivarInput = document.getElementById(`cultivar-edit-${index}`);
+    const altitudeInput = document.getElementById(`altitude-edit-${index}`); // NEU
     const tastingInput  = document.getElementById(`tasting-edit-${index}`);
 
     const newName     = nameInput?.value.trim()     || coffee.name;
@@ -197,6 +219,7 @@ async function saveEdits(index, card) {
     const newRoastery = roasteryInput?.value.trim() || '';
     const newProcess  = processInput ? processInput.dataset.value : coffee.process;
     const newCultivar = cultivarInput?.value.trim() || 'Unknown';
+    const newAltitude = altitudeInput?.value.trim() || '1500'; // NEU
     const newTasting  = tastingInput?.value.trim() || 'No notes';
 
     // Neue Farbe abrufen (wenn sie geändert wurde)
@@ -209,6 +232,7 @@ async function saveEdits(index, card) {
     coffee.roastery     = newRoastery;
     coffee.process      = newProcess;
     coffee.cultivar     = newCultivar;
+    coffee.altitude     = newAltitude; // NEU
     coffee.tastingNotes = newTasting;
     if (tempColor !== undefined) {
         coffee.colorTag = newColor;
@@ -234,6 +258,7 @@ async function saveEdits(index, card) {
     replaceInputWithDisplay(processInput, 'coffee-process-small', `process-display-${index}`, sanitizeHTML(displayLabel), isProcessEmpty);
 
     replaceInputWithDisplay(cultivarInput, 'extra-value', `cultivar-display-${index}`, sanitizeHTML(newCultivar === 'Unknown' ? '' : newCultivar));
+    replaceInputWithDisplay(altitudeInput, 'extra-value', `altitude-display-${index}`, sanitizeHTML(newAltitude === '1500' ? '' : newAltitude)); // NEU
     replaceInputWithDisplay(tastingInput, 'extra-value', `tasting-display-${index}`, sanitizeHTML(newTasting === 'No notes' ? '' : newTasting));
 
     const cultivarLine = document.getElementById(`cultivar-line-${index}`);
@@ -243,19 +268,33 @@ async function saveEdits(index, card) {
         cultivarLine.style.display = (newCultivar === 'Unknown' || newCultivar === '') ? 'none' : 'flex';
     }
 
+    // NEU: Altitude UI wiederherstellen
+    const altitudeLine = document.getElementById(`altitude-line-${index}`);
+    if (altitudeLine) {
+        const altitudeLabel = altitudeLine.querySelector('.extra-label');
+        if (altitudeLabel) altitudeLabel.style.display = '';
+        const altitudeUnit = document.getElementById(`altitude-unit-${index}`);
+        if (altitudeUnit) altitudeUnit.style.display = (newAltitude === '1500' || newAltitude === '') ? 'none' : 'inline';
+        altitudeLine.style.display = (newAltitude === '1500' || newAltitude === '') ? 'none' : 'flex';
+    }
+
     const tastingLine = document.getElementById(`tasting-line-${index}`);
     if (tastingLine) {
         const tastingLabel = tastingLine.querySelector('.extra-label');
         if (tastingLabel) tastingLabel.style.display = '';
         tastingLine.style.display = (newTasting === 'No notes' || newTasting === '') ? 'none' : 'flex';
     }
+    
+    // Check if the whole extra info block should be hidden or visible
     const extraInfo = document.getElementById(`extra-info-${index}`);
-    const hasAltitude = coffee.altitude && coffee.altitude !== '1500';
+    const hasAltitude = newAltitude && newAltitude !== '1500';
     if (extraInfo) {
         if ((newCultivar === 'Unknown' || newCultivar === '') &&
             (newTasting === 'No notes' || newTasting === '') &&
             !hasAltitude) {
             extraInfo.style.display = 'none';
+        } else {
+            extraInfo.style.display = 'block';
         }
     }
 
@@ -265,18 +304,18 @@ async function saveEdits(index, card) {
     // Persist locally
     localStorage.setItem('coffees', JSON.stringify(coffees));
 
-    // GEÄNDERT: Wir senden jetzt nur noch das saubere, kanonische Schema (keine Aliase mehr)
+    // Kanonisches Schema ans Backend senden
     const updates = {
         name: newName,
         origin: newOrigin,
         roastery: newRoastery,
         process: newProcess,
         cultivar: newCultivar,
+        altitude: newAltitude, // <-- NEU: Backend speichert es jetzt!
         tastingNotes: newTasting,
         colorTag: newColor
     };
 
-    // Backend PATCH aufrufen (ohne die alte Alias-Logik)
     await patchBrewToBackend(index, updates);
 }
 
@@ -290,7 +329,6 @@ function replaceInputWithDisplay(inputEl, className, id, value, hidden = false) 
     div.id        = id;
     
     if (hidden) {
-        // Setze den unsichtbaren Platzhalter für konsistente Kartenhöhen
         div.innerHTML = '&nbsp;';
         div.style.visibility = 'hidden';
     } else {
@@ -310,7 +348,6 @@ function escapeAttr(str) {
 
 /**
  * PATCH a single coffee card to the backend.
- * GEÄNDERT: Erwartet vom Backend das komplette, kanonische Kaffee-Objekt als Antwort.
  */
 async function patchBrewToBackend(index, updates) {
     const token    = getToken();
@@ -343,8 +380,6 @@ async function patchBrewToBackend(index, updates) {
         if (response.ok) {
             const data = await response.json();
             
-            // GEÄNDERT: Das Backend liefert uns jetzt das 100% saubere Objekt.
-            // Wir überschreiben unseren lokalen State einfach stumpf mit der Server-Wahrheit.
             if (data.coffee) {
                 console.log('[editor] Card updated perfectly via PATCH:', data.coffee);
                 coffees[index] = data.coffee; 
@@ -383,17 +418,14 @@ export function selectColor(index, color) {
     const card = document.querySelector(`.coffee-card[data-original-index="${index}"]`);
     if (!card) return;
     
-    // Nur die Hintergrund-Aura der Karte wird aktualisiert
     if (color) {
         card.style.setProperty('--card-accent-color', color);
     } else {
         card.style.removeProperty('--card-accent-color');
     }
 
-    // Farbe temporär in Dataset speichern
     card.dataset.tempColor = color;
 
-    // Update der .active Klasse im Popup
     const popup = document.getElementById(`color-popup-${index}`);
     if (popup) {
         const swatches = popup.querySelectorAll('.color-swatch');
