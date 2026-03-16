@@ -125,21 +125,25 @@ export function renderCoffeeCard(coffee, index) {
     const hasAltitude = coffee.altitude && coffee.altitude !== '1500';
     const hasTastingNotes = coffee.tastingNotes && coffee.tastingNotes !== 'No notes';
 
+    // Rendert die Struktur immer (damit der Editor sie greifen kann), 
+    // versteckt sie aber optisch, wenn keine Daten da sind.
     const extraInfoHTML = `
-                <div class="coffee-extra-info" id="extra-info-${index}" style="${(!hasVariety && !hasAltitude && !hasTastingNotes) ? 'display:none;' : ''}">
-                    <div class="coffee-extra-line" id="cultivar-line-${index}" style="${!hasVariety ? 'display:none;' : ''}">
-                        <span class="extra-label">Variety</span>
-                        <span class="extra-value" id="cultivar-display-${index}">${sanitizeHTML(hasVariety ? coffee.cultivar : '')}</span>
-                    </div>
-                    <div class="coffee-extra-line" id="altitude-line-${index}" style="${!hasAltitude ? 'display:none;' : ''}">
-                        <span class="extra-label">Altitude</span>
-                        <span class="extra-value" id="altitude-display-${index}">${sanitizeHTML(hasAltitude ? coffee.altitude : '')} masl</span>
-                    </div>
-                    <div class="coffee-extra-line" id="tasting-line-${index}" style="${!hasTastingNotes ? 'display:none;' : ''}">
-                        <span class="extra-label">Tasting Notes</span>
-                        <span class="extra-value" id="tasting-display-${index}">${sanitizeHTML(hasTastingNotes ? coffee.tastingNotes : '')}</span>
-                    </div>
-                </div>`;
+        <div class="coffee-extra-info" id="extra-info-${index}" style="display: ${(hasVariety || hasAltitude || hasTastingNotes) ? 'block' : 'none'};">
+            <div class="coffee-extra-line" id="cultivar-line-${index}" style="display: ${hasVariety ? 'flex' : 'none'};">
+                <span class="extra-label">Variety</span>
+                <span class="extra-value" id="cultivar-display-${index}">${hasVariety ? sanitizeHTML(coffee.cultivar) : ''}</span>
+            </div>
+            <div class="coffee-extra-line" id="altitude-line-${index}" style="display: ${hasAltitude ? 'flex' : 'none'};">
+                <span class="extra-label">Altitude</span>
+                <span class="extra-value" id="altitude-display-${index}">${hasAltitude ? sanitizeHTML(coffee.altitude) : ''}</span>
+                <span class="extra-unit" id="altitude-unit-${index}" style="display: ${hasAltitude ? 'inline' : 'none'};"> masl</span>
+            </div>
+            <div class="coffee-extra-line" id="tasting-line-${index}" style="display: ${hasTastingNotes ? 'flex' : 'none'};">
+                <span class="extra-label">Tasting Notes</span>
+                <span class="extra-value" id="tasting-display-${index}">${hasTastingNotes ? sanitizeHTML(coffee.tastingNotes) : ''}</span>
+            </div>
+        </div>
+    `;
 
     return `
         <div class="coffee-card" data-original-index="${index}" style="${colorStyle}">
