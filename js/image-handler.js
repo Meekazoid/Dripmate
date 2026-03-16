@@ -9,7 +9,7 @@ import { addCoffee, saveCoffeesAndSync } from './state.js';
 import { renderCoffees } from './coffee-list.js';
 import { showMessage } from './messages.js';
 
-async function compressImage(file, maxSizeMB = 4.0) {
+async function compressImage(file, maxSizeMB = 3.5) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -33,7 +33,7 @@ async function compressImage(file, maxSizeMB = 4.0) {
                 let quality = 0.85;
                 let dataUrl = canvas.toDataURL('image/jpeg', quality);
                 let attempts = 0;
-                const targetSize = maxSizeMB * 1024 * 1024 * 1.37;
+                const targetSize = 4.8 * 1024 * 1024;
                 let consecutiveResets = 0;
 
                 while (dataUrl.length > targetSize && attempts < 10) {
