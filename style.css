@@ -35,7 +35,7 @@ html {
 body.light-mode {
     --bg-primary: #fdf8f2;
     /* Warmes Creme-Weiss           (war: #ffffff) */     --bg-secondary: #f5ede0;
-    /* Leicht warmes Beige          (war: #f8f8f8) */     --bg-card: #fdf8f2;
+    /* Leicht warmes Beige          (war: #f8f8f8) */     --bg-card: #f8f0e4;
     /* Gleich wie bg-primary        (war: #ffffff) */     --text-primary: #1a1008;
     /* Fast-Schwarz mit Waerme      (war: #000000) */     --text-secondary: #5d4637;
     /* Warm-Ton wie Dark Mode       (war: #666666) */     --accent: #8b6f47;
@@ -2063,48 +2063,95 @@ body.light-mode .feedback-slider-labels {
 .feedback-suggestion {
     background: var(--bg-secondary);
     border: 1px solid var(--border);
-    padding: 20px;
+    padding: 14px 16px;
     border-radius: 8px;
-    margin-top: 24px;
+    margin-top: 16px;
 }
 
 .suggestion-title {
     font-weight: 600;
     color: var(--accent);
-    margin-bottom: 12px;
-    font-size: 0.95rem;
+    margin-bottom: 8px;
+    font-size: 0.82rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+}
+
+.suggestion-title svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
 }
 
 .suggestion-text {
     color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 16px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    font-size: 0.82rem;
 }
 
 .suggestion-values {
     display: flex;
-    gap: 16px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
 .suggestion-value {
     background: var(--bg-card);
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
 }
 
 .suggestion-value strong {
     color: var(--accent);
 }
 
+/* -- Apply + Undo button row -- */
+.suggestion-btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
 .apply-suggestion-btn {
-    margin-top: 16px;
+    flex: 1;
+    margin-top: 0;
+    padding: 10px 14px;
+    font-size: 0.78rem;
     background: var(--accent);
     color: white;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.apply-suggestion-btn:hover {
+    background: var(--accent-hover);
+}
+
+.undo-suggestion-btn {
+    flex: 0 0 auto;
+    margin-top: 0;
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.undo-suggestion-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(212, 165, 116, 0.06);
+}
+
+body.light-mode .undo-suggestion-btn:hover {
+    background: rgba(139, 111, 71, 0.06);
 }
 
 .history-btn {
