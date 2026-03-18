@@ -363,11 +363,11 @@ function generateSuggestion(index) {
             ${newTempStr ? `<div class="suggestion-value"><strong>Temp:</strong> ${newTempStr}</div>` : ''}
         </div>
         <div class="suggestion-btn-row">
-            <button class="apply-suggestion-btn" onclick="applySuggestion(${index}, ${cappedGrind}, '${newTempStr}')">
+            <button class="apply-suggestion-btn" onclick="event.stopPropagation(); applySuggestion(${index}, ${cappedGrind}, '${newTempStr}')">
                 Apply
             </button>
-            <button class="undo-suggestion-btn" onclick="undoFeedbackSliders(${index})">
-                Reset
+            <button class="undo-suggestion-btn" onclick="event.stopPropagation(); undoFeedbackSliders(${index})">
+                Undo
             </button>
         </div>
     `;
