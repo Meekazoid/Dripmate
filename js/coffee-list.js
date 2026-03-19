@@ -296,7 +296,7 @@ function buildRoasteryStack(items) {
             slot.classList.remove('roastery-card-exit-next', 'roastery-card-exit-prev');
             slot.style.transform = '';
             renderCurrent(direction);
-        }, 190);
+        }, 280);
     }
 
     function onPointerDown(e) {

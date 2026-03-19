@@ -3707,19 +3707,19 @@ button::-moz-focus-inner {
 }
 
 .roastery-stack-slot.roastery-card-exit-next {
-    animation: roastery-card-exit-next 0.19s cubic-bezier(0.4, 0, 1, 1) forwards;
+    animation: roastery-card-exit-next 0.28s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
 .roastery-stack-slot.roastery-card-exit-prev {
-    animation: roastery-card-exit-prev 0.19s cubic-bezier(0.4, 0, 1, 1) forwards;
+    animation: roastery-card-exit-prev 0.28s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
 .roastery-stack-slot.roastery-card-enter-next {
-    animation: roastery-card-enter-next 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: roastery-card-enter-next 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .roastery-stack-slot.roastery-card-enter-prev {
-    animation: roastery-card-enter-prev 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: roastery-card-enter-prev 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes roastery-card-exit-next {
