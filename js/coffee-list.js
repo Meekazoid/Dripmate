@@ -206,6 +206,9 @@ function buildRoasteryStack(items) {
     }
 
     function cleanupPointerState() {
+        if (pointerId !== null) {
+            slot.releasePointerCapture?.(pointerId);
+        }
         pointerId = null;
         isPointerDown = false;
         dragActive = false;
@@ -260,6 +263,10 @@ function buildRoasteryStack(items) {
 
         if (!dragActive) {
             if (Math.abs(deltaY) > LOCK_Y && Math.abs(deltaY) > Math.abs(deltaX)) {
+                // Pointer-Capture sauber freigeben bevor State zurückgesetzt wird
+                if (pointerId !== null) {
+                    slot.releasePointerCapture?.(pointerId);
+                }
                 cleanupPointerState();
                 return;
             }
