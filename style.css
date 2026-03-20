@@ -3643,7 +3643,6 @@ button::-moz-focus-inner {
 .roastery-stack-wrapper {
     position: relative;
     overflow: visible;
-    perspective: 900px;
 }
 
 .roastery-stack-ghost-layer {
@@ -3690,8 +3689,6 @@ button::-moz-focus-inner {
     overflow: visible;
     touch-action: pan-y;
     will-change: transform;
-    transform-style: preserve-3d;
-    backface-visibility: hidden;
     transition: transform .18s ease, opacity .18s ease;
 }
 
