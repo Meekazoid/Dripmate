@@ -171,13 +171,10 @@ function buildRoasteryStack(items) {
     let dragRaf = 0;
     let isTransitioning = false;
     let transitionAnim = null;
-    let previewDirection = 'next'; // 'next' | 'prev'
-
     // Schwellwerte
     const ACTIVATE_X = 12;
     const LOCK_Y = 10;
     const SWIPE_THRESHOLD = 64;
-    const PREVIEW_SWITCH_X = 10;
     const SWIPE_IGNORE_SELECTOR = '.delete-btn, .favorite-btn, .edit-btn, .inline-edit-input, .edit-process, .timer-btn, .feedback-slider, .apply-suggestion-btn, .adjust-btn, .history-btn, .reset-adjustments-btn, input, select, textarea, button, .color-picker-btn, .color-picker-popup';
 
     function makeCard(item) {
@@ -186,15 +183,6 @@ function buildRoasteryStack(items) {
         const card = tpl.content.firstElementChild;
 
         attachCardClickListener(card);
-        return card;
-    }
-
-    function makePreviewCard(item) {
-        const tpl = document.createElement('template');
-        tpl.innerHTML = renderCoffeeCard(item.coffee, item.originalIndex).trim();
-        const card = tpl.content.firstElementChild;
-        card.classList.remove('expanded');
-        card.classList.add('roastery-stack-preview-card');
         return card;
     }
 
@@ -226,13 +214,6 @@ function buildRoasteryStack(items) {
 
     function renderGhostPreview() {
         ghosts.forEach(g => { g.innerHTML = ''; });
-        if (ghosts.length === 0 || items.length < 2) return;
-
-        const previewIndex = previewDirection === 'prev'
-            ? (current - 1 + items.length) % items.length
-            : (current + 1) % items.length;
-        const previewCard = makePreviewCard(items[previewIndex]);
-        ghosts[0].appendChild(previewCard);
     }
 
     function renderCurrent(animateCounter = false) {
@@ -263,21 +244,16 @@ function buildRoasteryStack(items) {
 
     function applyDragTransform() {
         dragRaf = 0;
-        const scale = Math.max(0.93, 1 - Math.abs(pendingDeltaX) / 900);
-        slot.style.transform = `translate3d(${pendingDeltaX}px, 0, 0) scale(${scale})`;
+        slot.style.transform = `translateX(${pendingDeltaX}px)`;
     }
 
     function animateSnapBack() {
         slot.classList.add('roastery-snap-back');
         slot.style.transform = '';
         setTimeout(() => slot.classList.remove('roastery-snap-back'), 180);
-        if (previewDirection !== 'next') {
-            previewDirection = 'next';
-            renderGhostPreview();
-        }
     }
 
-    function go(direction /* 'left' | 'right' */) {
+    function go(direction /* 'left' | 'right' */, startOffsetX = 0) {
         if (isTransitioning) return;
         isTransitioning = true;
 
@@ -286,11 +262,8 @@ function buildRoasteryStack(items) {
         const activeCard = slot.querySelector('.coffee-card');
         if (activeCard) activeCard.dataset.suppressClick = '1';
 
-        const computed = window.getComputedStyle(slot).transform;
-        const matrix = computed && computed !== 'none' ? new DOMMatrixReadOnly(computed) : null;
-        const startX = matrix ? matrix.m41 : 0;
-        const endX = startX + (direction === 'left' ? -110 : 110);
-        const endRotate = direction === 'left' ? -1.4 : 1.4;
+        const startX = Number.isFinite(startOffsetX) ? startOffsetX : 0;
+        const endX = direction === 'left' ? -140 : 140;
 
         let finalized = false;
         const finalizeSwitch = () => {
@@ -306,28 +279,26 @@ function buildRoasteryStack(items) {
                 ? (current + 1) % items.length
                 : (current - 1 + items.length) % items.length;
 
-            previewDirection = 'next';
             slot.style.transform = '';
             slot.style.opacity = '';
-            slot.style.filter = '';
             renderCurrent(true);
             isTransitioning = false;
         };
 
         transitionAnim = slot.animate(
             [
-                { transform: `translate3d(${startX}px, 0, 0) scale(1) rotate(0deg)`, opacity: 1, filter: 'blur(0px)' },
-                { transform: `translate3d(${endX}px, 0, -50px) scale(0.95) rotate(${endRotate}deg)`, opacity: 0, filter: 'blur(1.2px)' }
+                { transform: `translateX(${startX}px)`, opacity: 1 },
+                { transform: `translateX(${endX}px)`, opacity: 0.18 }
             ],
             {
-                duration: 260,
-                easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+                duration: 180,
+                easing: 'ease-out',
                 fill: 'forwards'
             }
         );
 
         transitionAnim.addEventListener('finish', finalizeSwitch, { once: true });
-        setTimeout(finalizeSwitch, 360);
+        setTimeout(finalizeSwitch, 260);
     }
 
     function onPointerDown(e) {
@@ -340,7 +311,6 @@ function buildRoasteryStack(items) {
         pointerId = e.pointerId;
         isPointerDown = true;
         dragActive = false;
-        previewDirection = 'next';
         startX = e.clientX;
         startY = e.clientY;
         deltaX = 0;
@@ -372,16 +342,6 @@ function buildRoasteryStack(items) {
         pendingDeltaX = deltaX;
         if (!dragRaf) dragRaf = requestAnimationFrame(applyDragTransform);
 
-        const desiredPreviewDirection = deltaX > PREVIEW_SWITCH_X
-            ? 'prev'
-            : deltaX < -PREVIEW_SWITCH_X
-                ? 'next'
-                : previewDirection;
-        if (desiredPreviewDirection !== previewDirection) {
-            previewDirection = desiredPreviewDirection;
-            renderGhostPreview();
-        }
-
         e.preventDefault();
     }
 
@@ -398,7 +358,7 @@ function buildRoasteryStack(items) {
         if (!wasDrag) return;
 
         if (Math.abs(moved) >= SWIPE_THRESHOLD) {
-            go(moved < 0 ? 'left' : 'right');
+            go(moved < 0 ? 'left' : 'right', moved);
         } else {
             animateSnapBack();
         }
