@@ -83,9 +83,17 @@
                 
                 <button class="cs-btn" id="cameraBtn" aria-label="Coffee Shot">
                     <span class="cs-content">
+                        <span class="cs-ring cs-ring--outer" aria-hidden="true"></span>
+                        <span class="cs-ring cs-ring--inner" aria-hidden="true"></span>
+                        <span class="cs-scanline" aria-hidden="true"></span>
                         <span class="cs-icon-wrap">
-                            <!-- Coffee Bag Icon (as img for Safari filter reliability) -->
-                            <img class="cs-viewfinder cs-bag" src="assets/coffee-bag-shot.png" alt="Coffee Bag">
+                            <svg class="cs-viewfinder" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4 9V6a2 2 0 0 1 2-2h3"></path>
+                                <path d="M20 9V6a2 2 0 0 0-2-2h-3"></path>
+                                <path d="M4 15v3a2 2 0 0 0 2 2h3"></path>
+                                <path d="M20 15v3a2 2 0 0 1-2 2h-3"></path>
+                                <circle cx="12" cy="12" r="2.4"></circle>
+                            </svg>
                         </span>
                         <span class="cs-text">
                             <span class="cs-label">COFFEESHOT</span>
