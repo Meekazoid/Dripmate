@@ -198,23 +198,23 @@ h1 {
 /* --- Coffee Shot Signature Button (Golden Outline) --- */ .cs-btn {
     position: relative;
     display: flex;
-    width: 178px;
-    height: 178px;
+    width: 188px;
+    height: 188px;
     margin: 0 auto;
     padding: 0;
     background: transparent;
-    border: 1px solid color-mix(in srgb, var(--border) 76%, rgba(212, 165, 116, 0.24) 24%);
+    border: 1.5px solid color-mix(in srgb, var(--border) 76%, rgba(212, 165, 116, 0.24) 24%);
     cursor: pointer;
     border-radius: 999px;
     overflow: hidden;
     transition: none;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.38), inset 0 0 0 1px rgba(212, 165, 116, 0.06);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.38), inset 0 0 0 1px rgba(212, 165, 116, 0.12);
 }
 
 .cs-btn:hover {
     transform: none;
     background: transparent;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.38), inset 0 0 0 1px rgba(212, 165, 116, 0.06);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.38), inset 0 0 0 1px rgba(212, 165, 116, 0.12);
 }
 
 .cs-btn:active {
@@ -237,7 +237,7 @@ h1 {
     padding: 16px;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(34, 24, 14, 0.66) 0%, rgba(34, 24, 14, 0.66) 58%, rgba(34, 24, 14, 0.28) 76%, rgba(34, 24, 14, 0.08) 92%);
+    background: rgba(34, 24, 14, 0.66);
     border: none;
     border-radius: 999px;
 }
@@ -279,8 +279,6 @@ body.light-mode .add-section {
     height: 84%;
     top: 8%;
     left: 8%;
-    border-width: 1.5px;
-    border-color: rgba(212, 165, 116, 0.14);
 }
 
 .cs-ring--inner {
@@ -330,8 +328,7 @@ body.light-mode .add-section {
 body.light-mode .cs-btn {
     background: transparent;
     border-color: #d8cebf;
-    border-width: 1px;
-    box-shadow: 0 10px 28px rgba(26, 16, 8, 0.09), inset 0 0 0 1px rgba(157, 124, 96, 0.04);
+    box-shadow: 0 10px 28px rgba(26, 16, 8, 0.09), inset 0 0 0 1px rgba(157, 124, 96, 0.06);
 }
 
 body.light-mode .cs-label {
@@ -339,7 +336,7 @@ body.light-mode .cs-label {
 }
 
 body.light-mode .cs-content {
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.9) 58%, rgba(255, 255, 255, 0.45) 76%, rgba(255, 255, 255, 0.12) 92%);
+    background: rgba(255, 255, 255, 0.9);
 }
 
 body.light-mode .cs-coffeebag {
@@ -348,10 +345,6 @@ body.light-mode .cs-coffeebag {
 
 body.light-mode .cs-ring {
     border-color: rgba(139, 111, 71, 0.07);
-}
-
-body.light-mode .cs-ring--outer {
-    border-color: rgba(139, 111, 71, 0.14);
 }
 
 body.light-mode .cs-scanline {
@@ -375,7 +368,7 @@ body.light-mode .cs-scanline {
     align-items: center;
     justify-content: center;
     gap: 6px;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
     white-space: nowrap;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
@@ -391,7 +384,7 @@ body.light-mode .upload-button, body.light-mode .manual-button {
     border-color: rgba(212, 165, 116, 0.3);
     color: var(--text-primary);
     transform: none;
-    box-shadow: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 body.light-mode .upload-button:hover, body.light-mode .manual-button:hover {
@@ -403,6 +396,14 @@ body.light-mode .upload-button:hover, body.light-mode .manual-button:hover {
 .upload-button:disabled, .manual-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .upload-button, .manual-button {
+        width: auto;
+        padding: 10px 12px;
+        font-size: 0.629rem;
+    }
 }
 
 .button-icon {
@@ -589,16 +590,17 @@ button:hover {
     border: 1px solid var(--border);
     border-radius: 18px;
     cursor: pointer;
-    transition: border-color 0.2s, background 0.2s;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     min-width: 0;
     width: 100%;
     font-family: 'Sora', sans-serif;
     overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .brew-chip-top {
     height: 42px;
-    background: color-mix(in srgb, var(--bg-secondary) 90%, transparent 10%);
+    background: color-mix(in srgb, var(--bg-secondary) 86%, transparent 14%);
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
@@ -658,11 +660,6 @@ button:hover {
     min-width: 0;
 }
 
-.brew-chip:active {
-    transform: scale(0.97);
-    border-color: var(--accent);
-}
-
 .brew-chip:focus, .brew-chip:focus-visible {
     outline: none;
     border-color: var(--border);
@@ -673,13 +670,9 @@ body.light-mode .brew-chip:focus, body.light-mode .brew-chip:focus-visible {
     border-color: var(--border);
 }
 
-.brew-chip:focus, .brew-chip:focus-visible {
-    outline: none;
-    border-color: var(--border);
-}
-
 .brew-chip:hover {
     border-color: rgba(212, 165, 116, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .brew-chip-label {
@@ -713,10 +706,11 @@ body.light-mode .brew-chip:focus, body.light-mode .brew-chip:focus-visible {
 body.light-mode .brew-chip {
     background: #f0e9dd;
     border-color: #d5c8b7;
+    box-shadow: 0 4px 12px rgba(34, 24, 14, 0.08);
 }
 
 body.light-mode .brew-chip-top {
-    background: #ede4d6;
+    background: #ffffff;
     border-bottom-color: #d5c8b7;
 }
 
@@ -727,6 +721,7 @@ body.light-mode .brew-chip-icon {
 
 body.light-mode .brew-chip:hover {
     border-color: rgba(139, 100, 60, 0.3);
+    box-shadow: 0 5px 14px rgba(34, 24, 14, 0.11);
 }
 
 body.light-mode .brew-chip-group-label {
@@ -2099,7 +2094,7 @@ body.light-mode .step-progress-bar {
     transition: none !important;
 }
 
-.upload-button:active, .manual-button:active, .edit-btn:not(.editing):active {
+.edit-btn:not(.editing):active {
     background: var(--bg-card);
     border-color: var(--accent);
     color: var(--accent);
@@ -2122,7 +2117,7 @@ body.light-mode .step-progress-bar {
     background: inherit !important;
 }
 
-.upload-button.is-pressed, .manual-button.is-pressed, .adjust-btn.is-pressed, .timer-btn-secondary.is-pressed, .edit-btn.is-pressed {
+.adjust-btn.is-pressed, .timer-btn-secondary.is-pressed, .edit-btn.is-pressed {
     color: var(--accent);
 }
 
@@ -2141,7 +2136,7 @@ body.light-mode .adjust-btn:active, body.light-mode .adjust-btn.is-pressed {
     background: var(--bg-secondary) !important;
 }
 
-.upload-button.is-pressed, .manual-button.is-pressed, .edit-btn.is-pressed {
+.edit-btn.is-pressed {
     background: var(--bg-card) !important;
 }
 
@@ -2736,13 +2731,6 @@ h1 {
 
 .header-logo {
     height: 60px;
-}
-
-.upload-button,
-    .manual-button {
-    width: auto;
-    padding: 10px 12px;
-    font-size: 0.629rem;
 }
 
 .empty-state {
@@ -3728,18 +3716,13 @@ button::-moz-focus-inner {
     }
 
     .cs-label {
-        font-size: 1.18rem !important;
+        font-size: 1.36rem !important;
         letter-spacing: -0.01em !important;
         padding: 0 0.22em !important;
     }
 
     .cs-icon-wrap {
         transform: translateY(-9px) !important;
-    }
-
-    .cs-btn {
-        width: 186px !important;
-        height: 186px !important;
     }
 
     
